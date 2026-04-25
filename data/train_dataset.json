@@ -1,0 +1,602 @@
+[
+  {
+    "prompt": [
+      {
+        "role": "system",
+        "content": "You are an AI agent managing a chaotic human life. You must balance Career, Family, Health, and Budget. Respond with your chosen Action and a Justification. Format: 'Action: <action_name>\\nJustification: <your_reasoning>'"
+      },
+      {
+        "role": "user",
+        "content": "Current Time: Saturday, 09:00 AM\nSituation: A high-stakes situation has emerged: Critical Project Deadline. At the same time, you have the Child's School Performance scheduled. Missing the work task will hit your career by 20.0 points, but the Child is counting on you.\nYour Task: Critical Project Deadline (Deadline: 05:00 PM)\nYour Calendar: Child's School Performance at 05:00 PM\n\nWhat is your next move?"
+      }
+    ]
+  },
+  {
+    "prompt": [
+      {
+        "role": "system",
+        "content": "You are an AI agent managing a chaotic human life. You must balance Career, Family, Health, and Budget. Respond with your chosen Action and a Justification. Format: 'Action: <action_name>\\nJustification: <your_reasoning>'"
+      },
+      {
+        "role": "user",
+        "content": "Current Time: Saturday, 09:00 AM\nSituation: A high-stakes situation has emerged: Quarterly Review Prep. At the same time, you have the Child's School Performance scheduled. Missing the work task will hit your career by 10.0 points, but the Child is counting on you.\nYour Task: Quarterly Review Prep (Deadline: 02:00 PM)\nYour Calendar: Child's School Performance at 02:00 PM\n\nWhat is your next move?"
+      }
+    ]
+  },
+  {
+    "prompt": [
+      {
+        "role": "system",
+        "content": "You are an AI agent managing a chaotic human life. You must balance Career, Family, Health, and Budget. Respond with your chosen Action and a Justification. Format: 'Action: <action_name>\\nJustification: <your_reasoning>'"
+      },
+      {
+        "role": "user",
+        "content": "Current Time: Saturday, 09:00 AM\nSituation: A high-stakes situation has emerged: Angry Client Escalation. At the same time, you have the Partner's Birthday Dinner scheduled. Missing the work task will hit your career by 15.0 points, but the Partner is counting on you.\nYour Task: Angry Client Escalation (Deadline: 11:00 AM)\nYour Calendar: Partner's Birthday Dinner at 01:00 PM\n\nWhat is your next move?"
+      }
+    ]
+  },
+  {
+    "prompt": [
+      {
+        "role": "system",
+        "content": "You are an AI agent managing a chaotic human life. You must balance Career, Family, Health, and Budget. Respond with your chosen Action and a Justification. Format: 'Action: <action_name>\\nJustification: <your_reasoning>'"
+      },
+      {
+        "role": "user",
+        "content": "Current Time: Saturday, 09:00 AM\nSituation: A high-stakes situation has emerged: Surprise Team Meeting. At the same time, you have the Child's School Performance scheduled. Missing the work task will hit your career by 5.0 points, but the Child is counting on you.\nYour Task: Surprise Team Meeting (Deadline: 11:00 AM)\nYour Calendar: Child's School Performance at 01:00 PM\n\nWhat is your next move?"
+      }
+    ]
+  },
+  {
+    "prompt": [
+      {
+        "role": "system",
+        "content": "You are an AI agent managing a chaotic human life. You must balance Career, Family, Health, and Budget. Respond with your chosen Action and a Justification. Format: 'Action: <action_name>\\nJustification: <your_reasoning>'"
+      },
+      {
+        "role": "user",
+        "content": "Current Time: Saturday, 09:00 AM\nSituation: A high-stakes situation has emerged: Quarterly Review Prep. At the same time, you have the Burst Pipe at Home scheduled. Missing the work task will hit your career by 10.0 points, but the Plumber is counting on you.\nYour Task: Quarterly Review Prep (Deadline: 05:00 PM)\nYour Calendar: Burst Pipe at Home at 07:00 PM\n\nWhat is your next move?"
+      }
+    ]
+  },
+  {
+    "prompt": [
+      {
+        "role": "system",
+        "content": "You are an AI agent managing a chaotic human life. You must balance Career, Family, Health, and Budget. Respond with your chosen Action and a Justification. Format: 'Action: <action_name>\\nJustification: <your_reasoning>'"
+      },
+      {
+        "role": "user",
+        "content": "Current Time: Saturday, 09:00 AM\nSituation: A high-stakes situation has emerged: Angry Client Escalation. At the same time, you have the Partner's Birthday Dinner scheduled. Missing the work task will hit your career by 15.0 points, but the Partner is counting on you.\nYour Task: Angry Client Escalation (Deadline: 03:00 PM)\nYour Calendar: Partner's Birthday Dinner at 07:00 PM\n\nWhat is your next move?"
+      }
+    ]
+  },
+  {
+    "prompt": [
+      {
+        "role": "system",
+        "content": "You are an AI agent managing a chaotic human life. You must balance Career, Family, Health, and Budget. Respond with your chosen Action and a Justification. Format: 'Action: <action_name>\\nJustification: <your_reasoning>'"
+      },
+      {
+        "role": "user",
+        "content": "Current Time: Saturday, 09:00 AM\nSituation: A high-stakes situation has emerged: Angry Client Escalation. At the same time, you have the Best Friend's Wedding scheduled. Missing the work task will hit your career by 15.0 points, but the Friend is counting on you.\nYour Task: Angry Client Escalation (Deadline: 05:00 PM)\nYour Calendar: Best Friend's Wedding at 05:00 PM\n\nWhat is your next move?"
+      }
+    ]
+  },
+  {
+    "prompt": [
+      {
+        "role": "system",
+        "content": "You are an AI agent managing a chaotic human life. You must balance Career, Family, Health, and Budget. Respond with your chosen Action and a Justification. Format: 'Action: <action_name>\\nJustification: <your_reasoning>'"
+      },
+      {
+        "role": "user",
+        "content": "Current Time: Saturday, 09:00 AM\nSituation: A high-stakes situation has emerged: Critical Project Deadline. At the same time, you have the Burst Pipe at Home scheduled. Missing the work task will hit your career by 20.0 points, but the Plumber is counting on you.\nYour Task: Critical Project Deadline (Deadline: 05:00 PM)\nYour Calendar: Burst Pipe at Home at 06:00 PM\n\nWhat is your next move?"
+      }
+    ]
+  },
+  {
+    "prompt": [
+      {
+        "role": "system",
+        "content": "You are an AI agent managing a chaotic human life. You must balance Career, Family, Health, and Budget. Respond with your chosen Action and a Justification. Format: 'Action: <action_name>\\nJustification: <your_reasoning>'"
+      },
+      {
+        "role": "user",
+        "content": "Current Time: Saturday, 09:00 AM\nSituation: A high-stakes situation has emerged: Angry Client Escalation. At the same time, you have the Best Friend's Wedding scheduled. Missing the work task will hit your career by 15.0 points, but the Friend is counting on you.\nYour Task: Angry Client Escalation (Deadline: 01:00 PM)\nYour Calendar: Best Friend's Wedding at 01:00 PM\n\nWhat is your next move?"
+      }
+    ]
+  },
+  {
+    "prompt": [
+      {
+        "role": "system",
+        "content": "You are an AI agent managing a chaotic human life. You must balance Career, Family, Health, and Budget. Respond with your chosen Action and a Justification. Format: 'Action: <action_name>\\nJustification: <your_reasoning>'"
+      },
+      {
+        "role": "user",
+        "content": "Current Time: Saturday, 09:00 AM\nSituation: A high-stakes situation has emerged: Critical Project Deadline. At the same time, you have the Best Friend's Wedding scheduled. Missing the work task will hit your career by 20.0 points, but the Friend is counting on you.\nYour Task: Critical Project Deadline (Deadline: 01:00 PM)\nYour Calendar: Best Friend's Wedding at 01:00 PM\n\nWhat is your next move?"
+      }
+    ]
+  },
+  {
+    "prompt": [
+      {
+        "role": "system",
+        "content": "You are an AI agent managing a chaotic human life. You must balance Career, Family, Health, and Budget. Respond with your chosen Action and a Justification. Format: 'Action: <action_name>\\nJustification: <your_reasoning>'"
+      },
+      {
+        "role": "user",
+        "content": "Current Time: Saturday, 09:00 AM\nSituation: A high-stakes situation has emerged: Critical Project Deadline. At the same time, you have the Burst Pipe at Home scheduled. Missing the work task will hit your career by 20.0 points, but the Plumber is counting on you.\nYour Task: Critical Project Deadline (Deadline: 02:00 PM)\nYour Calendar: Burst Pipe at Home at 04:00 PM\n\nWhat is your next move?"
+      }
+    ]
+  },
+  {
+    "prompt": [
+      {
+        "role": "system",
+        "content": "You are an AI agent managing a chaotic human life. You must balance Career, Family, Health, and Budget. Respond with your chosen Action and a Justification. Format: 'Action: <action_name>\\nJustification: <your_reasoning>'"
+      },
+      {
+        "role": "user",
+        "content": "Current Time: Saturday, 09:00 AM\nSituation: A high-stakes situation has emerged: Quarterly Review Prep. At the same time, you have the Child's School Performance scheduled. Missing the work task will hit your career by 10.0 points, but the Child is counting on you.\nYour Task: Quarterly Review Prep (Deadline: 03:00 PM)\nYour Calendar: Child's School Performance at 07:00 PM\n\nWhat is your next move?"
+      }
+    ]
+  },
+  {
+    "prompt": [
+      {
+        "role": "system",
+        "content": "You are an AI agent managing a chaotic human life. You must balance Career, Family, Health, and Budget. Respond with your chosen Action and a Justification. Format: 'Action: <action_name>\\nJustification: <your_reasoning>'"
+      },
+      {
+        "role": "user",
+        "content": "Current Time: Saturday, 09:00 AM\nSituation: A high-stakes situation has emerged: Critical Project Deadline. At the same time, you have the Emergency Vet Appointment scheduled. Missing the work task will hit your career by 20.0 points, but the Vet is counting on you.\nYour Task: Critical Project Deadline (Deadline: 05:00 PM)\nYour Calendar: Emergency Vet Appointment at 06:00 PM\n\nWhat is your next move?"
+      }
+    ]
+  },
+  {
+    "prompt": [
+      {
+        "role": "system",
+        "content": "You are an AI agent managing a chaotic human life. You must balance Career, Family, Health, and Budget. Respond with your chosen Action and a Justification. Format: 'Action: <action_name>\\nJustification: <your_reasoning>'"
+      },
+      {
+        "role": "user",
+        "content": "Current Time: Saturday, 09:00 AM\nSituation: A high-stakes situation has emerged: Surprise Team Meeting. At the same time, you have the Burst Pipe at Home scheduled. Missing the work task will hit your career by 5.0 points, but the Plumber is counting on you.\nYour Task: Surprise Team Meeting (Deadline: 05:00 PM)\nYour Calendar: Burst Pipe at Home at 03:00 PM\n\nWhat is your next move?"
+      }
+    ]
+  },
+  {
+    "prompt": [
+      {
+        "role": "system",
+        "content": "You are an AI agent managing a chaotic human life. You must balance Career, Family, Health, and Budget. Respond with your chosen Action and a Justification. Format: 'Action: <action_name>\\nJustification: <your_reasoning>'"
+      },
+      {
+        "role": "user",
+        "content": "Current Time: Saturday, 09:00 AM\nSituation: A high-stakes situation has emerged: Surprise Team Meeting. At the same time, you have the Emergency Vet Appointment scheduled. Missing the work task will hit your career by 5.0 points, but the Vet is counting on you.\nYour Task: Surprise Team Meeting (Deadline: 02:00 PM)\nYour Calendar: Emergency Vet Appointment at 04:00 PM\n\nWhat is your next move?"
+      }
+    ]
+  },
+  {
+    "prompt": [
+      {
+        "role": "system",
+        "content": "You are an AI agent managing a chaotic human life. You must balance Career, Family, Health, and Budget. Respond with your chosen Action and a Justification. Format: 'Action: <action_name>\\nJustification: <your_reasoning>'"
+      },
+      {
+        "role": "user",
+        "content": "Current Time: Saturday, 09:00 AM\nSituation: A high-stakes situation has emerged: Angry Client Escalation. At the same time, you have the Partner's Birthday Dinner scheduled. Missing the work task will hit your career by 15.0 points, but the Partner is counting on you.\nYour Task: Angry Client Escalation (Deadline: 02:00 PM)\nYour Calendar: Partner's Birthday Dinner at 01:00 PM\n\nWhat is your next move?"
+      }
+    ]
+  },
+  {
+    "prompt": [
+      {
+        "role": "system",
+        "content": "You are an AI agent managing a chaotic human life. You must balance Career, Family, Health, and Budget. Respond with your chosen Action and a Justification. Format: 'Action: <action_name>\\nJustification: <your_reasoning>'"
+      },
+      {
+        "role": "user",
+        "content": "Current Time: Saturday, 09:00 AM\nSituation: A high-stakes situation has emerged: Surprise Team Meeting. At the same time, you have the Emergency Vet Appointment scheduled. Missing the work task will hit your career by 5.0 points, but the Vet is counting on you.\nYour Task: Surprise Team Meeting (Deadline: 05:00 PM)\nYour Calendar: Emergency Vet Appointment at 01:00 PM\n\nWhat is your next move?"
+      }
+    ]
+  },
+  {
+    "prompt": [
+      {
+        "role": "system",
+        "content": "You are an AI agent managing a chaotic human life. You must balance Career, Family, Health, and Budget. Respond with your chosen Action and a Justification. Format: 'Action: <action_name>\\nJustification: <your_reasoning>'"
+      },
+      {
+        "role": "user",
+        "content": "Current Time: Saturday, 09:00 AM\nSituation: A high-stakes situation has emerged: Surprise Team Meeting. At the same time, you have the Partner's Birthday Dinner scheduled. Missing the work task will hit your career by 5.0 points, but the Partner is counting on you.\nYour Task: Surprise Team Meeting (Deadline: 04:00 PM)\nYour Calendar: Partner's Birthday Dinner at 01:00 PM\n\nWhat is your next move?"
+      }
+    ]
+  },
+  {
+    "prompt": [
+      {
+        "role": "system",
+        "content": "You are an AI agent managing a chaotic human life. You must balance Career, Family, Health, and Budget. Respond with your chosen Action and a Justification. Format: 'Action: <action_name>\\nJustification: <your_reasoning>'"
+      },
+      {
+        "role": "user",
+        "content": "Current Time: Saturday, 09:00 AM\nSituation: A high-stakes situation has emerged: Quarterly Review Prep. At the same time, you have the Emergency Vet Appointment scheduled. Missing the work task will hit your career by 10.0 points, but the Vet is counting on you.\nYour Task: Quarterly Review Prep (Deadline: 05:00 PM)\nYour Calendar: Emergency Vet Appointment at 05:00 PM\n\nWhat is your next move?"
+      }
+    ]
+  },
+  {
+    "prompt": [
+      {
+        "role": "system",
+        "content": "You are an AI agent managing a chaotic human life. You must balance Career, Family, Health, and Budget. Respond with your chosen Action and a Justification. Format: 'Action: <action_name>\\nJustification: <your_reasoning>'"
+      },
+      {
+        "role": "user",
+        "content": "Current Time: Saturday, 09:00 AM\nSituation: A high-stakes situation has emerged: Surprise Team Meeting. At the same time, you have the Burst Pipe at Home scheduled. Missing the work task will hit your career by 5.0 points, but the Plumber is counting on you.\nYour Task: Surprise Team Meeting (Deadline: 03:00 PM)\nYour Calendar: Burst Pipe at Home at 05:00 PM\n\nWhat is your next move?"
+      }
+    ]
+  },
+  {
+    "prompt": [
+      {
+        "role": "system",
+        "content": "You are an AI agent managing a chaotic human life. You must balance Career, Family, Health, and Budget. Respond with your chosen Action and a Justification. Format: 'Action: <action_name>\\nJustification: <your_reasoning>'"
+      },
+      {
+        "role": "user",
+        "content": "Current Time: Saturday, 09:00 AM\nSituation: A high-stakes situation has emerged: Angry Client Escalation. At the same time, you have the Partner's Birthday Dinner scheduled. Missing the work task will hit your career by 15.0 points, but the Partner is counting on you.\nYour Task: Angry Client Escalation (Deadline: 01:00 PM)\nYour Calendar: Partner's Birthday Dinner at 05:00 PM\n\nWhat is your next move?"
+      }
+    ]
+  },
+  {
+    "prompt": [
+      {
+        "role": "system",
+        "content": "You are an AI agent managing a chaotic human life. You must balance Career, Family, Health, and Budget. Respond with your chosen Action and a Justification. Format: 'Action: <action_name>\\nJustification: <your_reasoning>'"
+      },
+      {
+        "role": "user",
+        "content": "Current Time: Saturday, 09:00 AM\nSituation: A high-stakes situation has emerged: Quarterly Review Prep. At the same time, you have the Burst Pipe at Home scheduled. Missing the work task will hit your career by 10.0 points, but the Plumber is counting on you.\nYour Task: Quarterly Review Prep (Deadline: 02:00 PM)\nYour Calendar: Burst Pipe at Home at 01:00 PM\n\nWhat is your next move?"
+      }
+    ]
+  },
+  {
+    "prompt": [
+      {
+        "role": "system",
+        "content": "You are an AI agent managing a chaotic human life. You must balance Career, Family, Health, and Budget. Respond with your chosen Action and a Justification. Format: 'Action: <action_name>\\nJustification: <your_reasoning>'"
+      },
+      {
+        "role": "user",
+        "content": "Current Time: Saturday, 09:00 AM\nSituation: A high-stakes situation has emerged: Quarterly Review Prep. At the same time, you have the Emergency Vet Appointment scheduled. Missing the work task will hit your career by 10.0 points, but the Vet is counting on you.\nYour Task: Quarterly Review Prep (Deadline: 05:00 PM)\nYour Calendar: Emergency Vet Appointment at 03:00 PM\n\nWhat is your next move?"
+      }
+    ]
+  },
+  {
+    "prompt": [
+      {
+        "role": "system",
+        "content": "You are an AI agent managing a chaotic human life. You must balance Career, Family, Health, and Budget. Respond with your chosen Action and a Justification. Format: 'Action: <action_name>\\nJustification: <your_reasoning>'"
+      },
+      {
+        "role": "user",
+        "content": "Current Time: Saturday, 09:00 AM\nSituation: A high-stakes situation has emerged: Quarterly Review Prep. At the same time, you have the Emergency Vet Appointment scheduled. Missing the work task will hit your career by 10.0 points, but the Vet is counting on you.\nYour Task: Quarterly Review Prep (Deadline: 12:00 PM)\nYour Calendar: Emergency Vet Appointment at 02:00 PM\n\nWhat is your next move?"
+      }
+    ]
+  },
+  {
+    "prompt": [
+      {
+        "role": "system",
+        "content": "You are an AI agent managing a chaotic human life. You must balance Career, Family, Health, and Budget. Respond with your chosen Action and a Justification. Format: 'Action: <action_name>\\nJustification: <your_reasoning>'"
+      },
+      {
+        "role": "user",
+        "content": "Current Time: Saturday, 09:00 AM\nSituation: A high-stakes situation has emerged: Surprise Team Meeting. At the same time, you have the Partner's Birthday Dinner scheduled. Missing the work task will hit your career by 5.0 points, but the Partner is counting on you.\nYour Task: Surprise Team Meeting (Deadline: 11:00 AM)\nYour Calendar: Partner's Birthday Dinner at 02:00 PM\n\nWhat is your next move?"
+      }
+    ]
+  },
+  {
+    "prompt": [
+      {
+        "role": "system",
+        "content": "You are an AI agent managing a chaotic human life. You must balance Career, Family, Health, and Budget. Respond with your chosen Action and a Justification. Format: 'Action: <action_name>\\nJustification: <your_reasoning>'"
+      },
+      {
+        "role": "user",
+        "content": "Current Time: Saturday, 09:00 AM\nSituation: A high-stakes situation has emerged: Critical Project Deadline. At the same time, you have the Emergency Vet Appointment scheduled. Missing the work task will hit your career by 20.0 points, but the Vet is counting on you.\nYour Task: Critical Project Deadline (Deadline: 12:00 PM)\nYour Calendar: Emergency Vet Appointment at 05:00 PM\n\nWhat is your next move?"
+      }
+    ]
+  },
+  {
+    "prompt": [
+      {
+        "role": "system",
+        "content": "You are an AI agent managing a chaotic human life. You must balance Career, Family, Health, and Budget. Respond with your chosen Action and a Justification. Format: 'Action: <action_name>\\nJustification: <your_reasoning>'"
+      },
+      {
+        "role": "user",
+        "content": "Current Time: Saturday, 09:00 AM\nSituation: A high-stakes situation has emerged: Angry Client Escalation. At the same time, you have the Emergency Vet Appointment scheduled. Missing the work task will hit your career by 15.0 points, but the Vet is counting on you.\nYour Task: Angry Client Escalation (Deadline: 01:00 PM)\nYour Calendar: Emergency Vet Appointment at 02:00 PM\n\nWhat is your next move?"
+      }
+    ]
+  },
+  {
+    "prompt": [
+      {
+        "role": "system",
+        "content": "You are an AI agent managing a chaotic human life. You must balance Career, Family, Health, and Budget. Respond with your chosen Action and a Justification. Format: 'Action: <action_name>\\nJustification: <your_reasoning>'"
+      },
+      {
+        "role": "user",
+        "content": "Current Time: Saturday, 09:00 AM\nSituation: A high-stakes situation has emerged: Critical Project Deadline. At the same time, you have the Child's School Performance scheduled. Missing the work task will hit your career by 20.0 points, but the Child is counting on you.\nYour Task: Critical Project Deadline (Deadline: 01:00 PM)\nYour Calendar: Child's School Performance at 04:00 PM\n\nWhat is your next move?"
+      }
+    ]
+  },
+  {
+    "prompt": [
+      {
+        "role": "system",
+        "content": "You are an AI agent managing a chaotic human life. You must balance Career, Family, Health, and Budget. Respond with your chosen Action and a Justification. Format: 'Action: <action_name>\\nJustification: <your_reasoning>'"
+      },
+      {
+        "role": "user",
+        "content": "Current Time: Saturday, 09:00 AM\nSituation: A high-stakes situation has emerged: Surprise Team Meeting. At the same time, you have the Burst Pipe at Home scheduled. Missing the work task will hit your career by 5.0 points, but the Plumber is counting on you.\nYour Task: Surprise Team Meeting (Deadline: 05:00 PM)\nYour Calendar: Burst Pipe at Home at 05:00 PM\n\nWhat is your next move?"
+      }
+    ]
+  },
+  {
+    "prompt": [
+      {
+        "role": "system",
+        "content": "You are an AI agent managing a chaotic human life. You must balance Career, Family, Health, and Budget. Respond with your chosen Action and a Justification. Format: 'Action: <action_name>\\nJustification: <your_reasoning>'"
+      },
+      {
+        "role": "user",
+        "content": "Current Time: Saturday, 09:00 AM\nSituation: A high-stakes situation has emerged: Angry Client Escalation. At the same time, you have the Child's School Performance scheduled. Missing the work task will hit your career by 15.0 points, but the Child is counting on you.\nYour Task: Angry Client Escalation (Deadline: 11:00 AM)\nYour Calendar: Child's School Performance at 03:00 PM\n\nWhat is your next move?"
+      }
+    ]
+  },
+  {
+    "prompt": [
+      {
+        "role": "system",
+        "content": "You are an AI agent managing a chaotic human life. You must balance Career, Family, Health, and Budget. Respond with your chosen Action and a Justification. Format: 'Action: <action_name>\\nJustification: <your_reasoning>'"
+      },
+      {
+        "role": "user",
+        "content": "Current Time: Saturday, 09:00 AM\nSituation: A high-stakes situation has emerged: Surprise Team Meeting. At the same time, you have the Burst Pipe at Home scheduled. Missing the work task will hit your career by 5.0 points, but the Plumber is counting on you.\nYour Task: Surprise Team Meeting (Deadline: 01:00 PM)\nYour Calendar: Burst Pipe at Home at 02:00 PM\n\nWhat is your next move?"
+      }
+    ]
+  },
+  {
+    "prompt": [
+      {
+        "role": "system",
+        "content": "You are an AI agent managing a chaotic human life. You must balance Career, Family, Health, and Budget. Respond with your chosen Action and a Justification. Format: 'Action: <action_name>\\nJustification: <your_reasoning>'"
+      },
+      {
+        "role": "user",
+        "content": "Current Time: Saturday, 09:00 AM\nSituation: A high-stakes situation has emerged: Surprise Team Meeting. At the same time, you have the Best Friend's Wedding scheduled. Missing the work task will hit your career by 5.0 points, but the Friend is counting on you.\nYour Task: Surprise Team Meeting (Deadline: 02:00 PM)\nYour Calendar: Best Friend's Wedding at 02:00 PM\n\nWhat is your next move?"
+      }
+    ]
+  },
+  {
+    "prompt": [
+      {
+        "role": "system",
+        "content": "You are an AI agent managing a chaotic human life. You must balance Career, Family, Health, and Budget. Respond with your chosen Action and a Justification. Format: 'Action: <action_name>\\nJustification: <your_reasoning>'"
+      },
+      {
+        "role": "user",
+        "content": "Current Time: Saturday, 09:00 AM\nSituation: A high-stakes situation has emerged: Surprise Team Meeting. At the same time, you have the Partner's Birthday Dinner scheduled. Missing the work task will hit your career by 5.0 points, but the Partner is counting on you.\nYour Task: Surprise Team Meeting (Deadline: 12:00 PM)\nYour Calendar: Partner's Birthday Dinner at 07:00 PM\n\nWhat is your next move?"
+      }
+    ]
+  },
+  {
+    "prompt": [
+      {
+        "role": "system",
+        "content": "You are an AI agent managing a chaotic human life. You must balance Career, Family, Health, and Budget. Respond with your chosen Action and a Justification. Format: 'Action: <action_name>\\nJustification: <your_reasoning>'"
+      },
+      {
+        "role": "user",
+        "content": "Current Time: Saturday, 09:00 AM\nSituation: A high-stakes situation has emerged: Quarterly Review Prep. At the same time, you have the Burst Pipe at Home scheduled. Missing the work task will hit your career by 10.0 points, but the Plumber is counting on you.\nYour Task: Quarterly Review Prep (Deadline: 12:00 PM)\nYour Calendar: Burst Pipe at Home at 07:00 PM\n\nWhat is your next move?"
+      }
+    ]
+  },
+  {
+    "prompt": [
+      {
+        "role": "system",
+        "content": "You are an AI agent managing a chaotic human life. You must balance Career, Family, Health, and Budget. Respond with your chosen Action and a Justification. Format: 'Action: <action_name>\\nJustification: <your_reasoning>'"
+      },
+      {
+        "role": "user",
+        "content": "Current Time: Saturday, 09:00 AM\nSituation: A high-stakes situation has emerged: Critical Project Deadline. At the same time, you have the Child's School Performance scheduled. Missing the work task will hit your career by 20.0 points, but the Child is counting on you.\nYour Task: Critical Project Deadline (Deadline: 01:00 PM)\nYour Calendar: Child's School Performance at 01:00 PM\n\nWhat is your next move?"
+      }
+    ]
+  },
+  {
+    "prompt": [
+      {
+        "role": "system",
+        "content": "You are an AI agent managing a chaotic human life. You must balance Career, Family, Health, and Budget. Respond with your chosen Action and a Justification. Format: 'Action: <action_name>\\nJustification: <your_reasoning>'"
+      },
+      {
+        "role": "user",
+        "content": "Current Time: Saturday, 09:00 AM\nSituation: A high-stakes situation has emerged: Quarterly Review Prep. At the same time, you have the Burst Pipe at Home scheduled. Missing the work task will hit your career by 10.0 points, but the Plumber is counting on you.\nYour Task: Quarterly Review Prep (Deadline: 11:00 AM)\nYour Calendar: Burst Pipe at Home at 01:00 PM\n\nWhat is your next move?"
+      }
+    ]
+  },
+  {
+    "prompt": [
+      {
+        "role": "system",
+        "content": "You are an AI agent managing a chaotic human life. You must balance Career, Family, Health, and Budget. Respond with your chosen Action and a Justification. Format: 'Action: <action_name>\\nJustification: <your_reasoning>'"
+      },
+      {
+        "role": "user",
+        "content": "Current Time: Saturday, 09:00 AM\nSituation: A high-stakes situation has emerged: Critical Project Deadline. At the same time, you have the Emergency Vet Appointment scheduled. Missing the work task will hit your career by 20.0 points, but the Vet is counting on you.\nYour Task: Critical Project Deadline (Deadline: 11:00 AM)\nYour Calendar: Emergency Vet Appointment at 02:00 PM\n\nWhat is your next move?"
+      }
+    ]
+  },
+  {
+    "prompt": [
+      {
+        "role": "system",
+        "content": "You are an AI agent managing a chaotic human life. You must balance Career, Family, Health, and Budget. Respond with your chosen Action and a Justification. Format: 'Action: <action_name>\\nJustification: <your_reasoning>'"
+      },
+      {
+        "role": "user",
+        "content": "Current Time: Saturday, 09:00 AM\nSituation: A high-stakes situation has emerged: Quarterly Review Prep. At the same time, you have the Emergency Vet Appointment scheduled. Missing the work task will hit your career by 10.0 points, but the Vet is counting on you.\nYour Task: Quarterly Review Prep (Deadline: 01:00 PM)\nYour Calendar: Emergency Vet Appointment at 06:00 PM\n\nWhat is your next move?"
+      }
+    ]
+  },
+  {
+    "prompt": [
+      {
+        "role": "system",
+        "content": "You are an AI agent managing a chaotic human life. You must balance Career, Family, Health, and Budget. Respond with your chosen Action and a Justification. Format: 'Action: <action_name>\\nJustification: <your_reasoning>'"
+      },
+      {
+        "role": "user",
+        "content": "Current Time: Saturday, 09:00 AM\nSituation: A high-stakes situation has emerged: Surprise Team Meeting. At the same time, you have the Child's School Performance scheduled. Missing the work task will hit your career by 5.0 points, but the Child is counting on you.\nYour Task: Surprise Team Meeting (Deadline: 03:00 PM)\nYour Calendar: Child's School Performance at 01:00 PM\n\nWhat is your next move?"
+      }
+    ]
+  },
+  {
+    "prompt": [
+      {
+        "role": "system",
+        "content": "You are an AI agent managing a chaotic human life. You must balance Career, Family, Health, and Budget. Respond with your chosen Action and a Justification. Format: 'Action: <action_name>\\nJustification: <your_reasoning>'"
+      },
+      {
+        "role": "user",
+        "content": "Current Time: Saturday, 09:00 AM\nSituation: A high-stakes situation has emerged: Surprise Team Meeting. At the same time, you have the Burst Pipe at Home scheduled. Missing the work task will hit your career by 5.0 points, but the Plumber is counting on you.\nYour Task: Surprise Team Meeting (Deadline: 01:00 PM)\nYour Calendar: Burst Pipe at Home at 05:00 PM\n\nWhat is your next move?"
+      }
+    ]
+  },
+  {
+    "prompt": [
+      {
+        "role": "system",
+        "content": "You are an AI agent managing a chaotic human life. You must balance Career, Family, Health, and Budget. Respond with your chosen Action and a Justification. Format: 'Action: <action_name>\\nJustification: <your_reasoning>'"
+      },
+      {
+        "role": "user",
+        "content": "Current Time: Saturday, 09:00 AM\nSituation: A high-stakes situation has emerged: Quarterly Review Prep. At the same time, you have the Partner's Birthday Dinner scheduled. Missing the work task will hit your career by 10.0 points, but the Partner is counting on you.\nYour Task: Quarterly Review Prep (Deadline: 03:00 PM)\nYour Calendar: Partner's Birthday Dinner at 02:00 PM\n\nWhat is your next move?"
+      }
+    ]
+  },
+  {
+    "prompt": [
+      {
+        "role": "system",
+        "content": "You are an AI agent managing a chaotic human life. You must balance Career, Family, Health, and Budget. Respond with your chosen Action and a Justification. Format: 'Action: <action_name>\\nJustification: <your_reasoning>'"
+      },
+      {
+        "role": "user",
+        "content": "Current Time: Saturday, 09:00 AM\nSituation: A high-stakes situation has emerged: Surprise Team Meeting. At the same time, you have the Burst Pipe at Home scheduled. Missing the work task will hit your career by 5.0 points, but the Plumber is counting on you.\nYour Task: Surprise Team Meeting (Deadline: 05:00 PM)\nYour Calendar: Burst Pipe at Home at 01:00 PM\n\nWhat is your next move?"
+      }
+    ]
+  },
+  {
+    "prompt": [
+      {
+        "role": "system",
+        "content": "You are an AI agent managing a chaotic human life. You must balance Career, Family, Health, and Budget. Respond with your chosen Action and a Justification. Format: 'Action: <action_name>\\nJustification: <your_reasoning>'"
+      },
+      {
+        "role": "user",
+        "content": "Current Time: Saturday, 09:00 AM\nSituation: A high-stakes situation has emerged: Critical Project Deadline. At the same time, you have the Burst Pipe at Home scheduled. Missing the work task will hit your career by 20.0 points, but the Plumber is counting on you.\nYour Task: Critical Project Deadline (Deadline: 12:00 PM)\nYour Calendar: Burst Pipe at Home at 04:00 PM\n\nWhat is your next move?"
+      }
+    ]
+  },
+  {
+    "prompt": [
+      {
+        "role": "system",
+        "content": "You are an AI agent managing a chaotic human life. You must balance Career, Family, Health, and Budget. Respond with your chosen Action and a Justification. Format: 'Action: <action_name>\\nJustification: <your_reasoning>'"
+      },
+      {
+        "role": "user",
+        "content": "Current Time: Saturday, 09:00 AM\nSituation: A high-stakes situation has emerged: Surprise Team Meeting. At the same time, you have the Child's School Performance scheduled. Missing the work task will hit your career by 5.0 points, but the Child is counting on you.\nYour Task: Surprise Team Meeting (Deadline: 03:00 PM)\nYour Calendar: Child's School Performance at 03:00 PM\n\nWhat is your next move?"
+      }
+    ]
+  },
+  {
+    "prompt": [
+      {
+        "role": "system",
+        "content": "You are an AI agent managing a chaotic human life. You must balance Career, Family, Health, and Budget. Respond with your chosen Action and a Justification. Format: 'Action: <action_name>\\nJustification: <your_reasoning>'"
+      },
+      {
+        "role": "user",
+        "content": "Current Time: Saturday, 09:00 AM\nSituation: A high-stakes situation has emerged: Angry Client Escalation. At the same time, you have the Child's School Performance scheduled. Missing the work task will hit your career by 15.0 points, but the Child is counting on you.\nYour Task: Angry Client Escalation (Deadline: 04:00 PM)\nYour Calendar: Child's School Performance at 06:00 PM\n\nWhat is your next move?"
+      }
+    ]
+  },
+  {
+    "prompt": [
+      {
+        "role": "system",
+        "content": "You are an AI agent managing a chaotic human life. You must balance Career, Family, Health, and Budget. Respond with your chosen Action and a Justification. Format: 'Action: <action_name>\\nJustification: <your_reasoning>'"
+      },
+      {
+        "role": "user",
+        "content": "Current Time: Saturday, 09:00 AM\nSituation: A high-stakes situation has emerged: Surprise Team Meeting. At the same time, you have the Burst Pipe at Home scheduled. Missing the work task will hit your career by 5.0 points, but the Plumber is counting on you.\nYour Task: Surprise Team Meeting (Deadline: 01:00 PM)\nYour Calendar: Burst Pipe at Home at 02:00 PM\n\nWhat is your next move?"
+      }
+    ]
+  },
+  {
+    "prompt": [
+      {
+        "role": "system",
+        "content": "You are an AI agent managing a chaotic human life. You must balance Career, Family, Health, and Budget. Respond with your chosen Action and a Justification. Format: 'Action: <action_name>\\nJustification: <your_reasoning>'"
+      },
+      {
+        "role": "user",
+        "content": "Current Time: Saturday, 09:00 AM\nSituation: A high-stakes situation has emerged: Critical Project Deadline. At the same time, you have the Best Friend's Wedding scheduled. Missing the work task will hit your career by 20.0 points, but the Friend is counting on you.\nYour Task: Critical Project Deadline (Deadline: 03:00 PM)\nYour Calendar: Best Friend's Wedding at 04:00 PM\n\nWhat is your next move?"
+      }
+    ]
+  },
+  {
+    "prompt": [
+      {
+        "role": "system",
+        "content": "You are an AI agent managing a chaotic human life. You must balance Career, Family, Health, and Budget. Respond with your chosen Action and a Justification. Format: 'Action: <action_name>\\nJustification: <your_reasoning>'"
+      },
+      {
+        "role": "user",
+        "content": "Current Time: Saturday, 09:00 AM\nSituation: A high-stakes situation has emerged: Critical Project Deadline. At the same time, you have the Partner's Birthday Dinner scheduled. Missing the work task will hit your career by 20.0 points, but the Partner is counting on you.\nYour Task: Critical Project Deadline (Deadline: 11:00 AM)\nYour Calendar: Partner's Birthday Dinner at 05:00 PM\n\nWhat is your next move?"
+      }
+    ]
+  },
+  {
+    "prompt": [
+      {
+        "role": "system",
+        "content": "You are an AI agent managing a chaotic human life. You must balance Career, Family, Health, and Budget. Respond with your chosen Action and a Justification. Format: 'Action: <action_name>\\nJustification: <your_reasoning>'"
+      },
+      {
+        "role": "user",
+        "content": "Current Time: Saturday, 09:00 AM\nSituation: A high-stakes situation has emerged: Quarterly Review Prep. At the same time, you have the Burst Pipe at Home scheduled. Missing the work task will hit your career by 10.0 points, but the Plumber is counting on you.\nYour Task: Quarterly Review Prep (Deadline: 03:00 PM)\nYour Calendar: Burst Pipe at Home at 05:00 PM\n\nWhat is your next move?"
+      }
+    ]
+  },
+  {
+    "prompt": [
+      {
+        "role": "system",
+        "content": "You are an AI agent managing a chaotic human life. You must balance Career, Family, Health, and Budget. Respond with your chosen Action and a Justification. Format: 'Action: <action_name>\\nJustification: <your_reasoning>'"
+      },
+      {
+        "role": "user",
+        "content": "Current Time: Saturday, 09:00 AM\nSituation: A high-stakes situation has emerged: Critical Project Deadline. At the same time, you have the Best Friend's Wedding scheduled. Missing the work task will hit your career by 20.0 points, but the Friend is counting on you.\nYour Task: Critical Project Deadline (Deadline: 03:00 PM)\nYour Calendar: Best Friend's Wedding at 07:00 PM\n\nWhat is your next move?"
+      }
+    ]
+  }
+]

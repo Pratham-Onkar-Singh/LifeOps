@@ -1,0 +1,22 @@
+[
+    {
+        "id": "work_vs_family_birthday",
+        "description": "Your boss just asked you to stay late to finish a critical report, but it's your Mom's 60th birthday dinner tonight.",
+        "choices": ["stay_late_work", "go_to_family_event", "delegate_work", "ask_for_understanding"]
+    },
+    {
+        "id": "health_vs_deadline",
+        "description": "You have a massive headache and feel a fever coming on, but a project proposal is due in 4 hours that could secure your promotion.",
+        "choices": ["rest", "work_hard", "delegate_work", "do_nothing"]
+    },
+    {
+        "id": "budget_vs_social",
+        "description": "Your best friends are going on a spontaneous weekend trip that costs $500, but you're $200 short of your monthly savings goal.",
+        "choices": ["spend_money", "rest", "work_hard", "do_nothing"]
+    },
+    {
+        "id": "angry_client_vs_dinner",
+        "description": "An angry client is calling you after hours demanding a fix, just as you're sitting down for a rare romantic dinner with your partner.",
+        "choices": ["stay_late_work", "ask_for_understanding", "do_nothing"]
+    }
+]

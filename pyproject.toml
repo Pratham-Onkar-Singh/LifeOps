@@ -1,0 +1,46 @@
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+# All rights reserved.
+#
+# This source code is licensed under the BSD-style license found in the
+# LICENSE file in the root directory of this source tree.
+
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "openenv-lifeops"
+version = "0.1.0"
+description = "Lifeops environment for OpenEnv"
+requires-python = ">=3.10"
+dependencies = [
+    # Core OpenEnv runtime (provides FastAPI server + HTTP client types)
+    "openenv-core[core]>=0.2.2",
+    # Training dependencies
+    "trl>=0.12.0",
+    "peft",
+    "bitsandbytes",
+    "sentencepiece",
+    "torch",
+    "transformers",
+    "python-dotenv",
+    # Note: unsloth usually requires specific installation steps,
+    # but we list it here for completeness.
+    # "unsloth",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-cov>=4.0.0",
+]
+
+[project.scripts]
+# Server entry point - enables running via: uv run --project . server
+# or: python -m lifeops.server.app
+server = "lifeops.server.app:main"
+
+[tool.setuptools]
+include-package-data = true
+packages = ["lifeops", "lifeops.server"]
+package-dir = { "lifeops" = ".", "lifeops.server" = "server" }
