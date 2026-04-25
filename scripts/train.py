@@ -11,6 +11,7 @@ Uses GRPO (Group Relative Policy Optimization) with Unsloth for efficient RL.
 
 import torch
 import re
+import inspect
 from typing import List, Dict, Optional
 from datetime import datetime
 
@@ -110,6 +111,16 @@ def format_reward_func(prompts, completions, **kwargs) -> List[float]:
     return rewards
 
 
+def _build_grpo_config(**kwargs):
+    """Construct GRPOConfig across TRL versions (some drop max_prompt_length)."""
+    sig = inspect.signature(GRPOConfig.__init__)
+    filtered = {k: v for k, v in kwargs.items() if k in sig.parameters}
+    dropped = sorted(set(kwargs) - set(filtered))
+    if dropped:
+        print("Note: dropping unsupported GRPOConfig args:", dropped)
+    return GRPOConfig(**filtered)
+
+
 # --- Training Loop ---
 
 def run_training(
@@ -125,7 +136,7 @@ def run_training(
     dataset = LifeopsDatasetBuilder.generate_rl_dataset(num_samples)
     
     # 2. Configure GRPO
-    training_args = GRPOConfig(
+    training_args = _build_grpo_config(
         output_dir=output_dir,
         learning_rate=5e-6,
         per_device_train_batch_size=4,
