@@ -83,10 +83,10 @@ except ImportError:
 
 # --- Reward Functions ---
 
-def _format_reward(text: str) -> float:
+def _format_reward(text: object, tokenizer=None) -> float:
     """Stronger format shaping in roughly [-3, +2]."""
     score = 0.0
-    text = strip_generative_spill(text)
+    text = strip_generative_spill(text, tokenizer=tokenizer)
     if re.search(r"(?im)\b(human|assistant|user|system)\s*:", text):
         score -= 1.0
     if len(re.findall(r"(?im)^\s*action\s*:", text)) > 1:
@@ -155,7 +155,9 @@ def lifeops_reward_func(
         prompts = kwargs.get("prompts")
     if allowed_actions_json is None:
         allowed_actions_json = kwargs.get("allowed_actions_json")
-    
+
+    tok = kwargs.get("processing_class") or kwargs.get("tokenizer")
+
     for idx, completion in enumerate(completions):
         prompt = None
         if prompts is not None and idx < len(prompts):
@@ -166,7 +168,7 @@ def lifeops_reward_func(
             allowed_blob = allowed_actions_json[idx]
 
         allowed = resolve_allowed_actions(prompt=prompt, allowed_actions_json=allowed_blob)
-        cleaned = strip_generative_spill(completion)
+        cleaned = strip_generative_spill(completion, tokenizer=tok)
         phrase = extract_raw_action_phrase(cleaned)
         mapped, map_pen = map_phrase_to_allowed_action(phrase or "", allowed)
         if not mapped:
@@ -187,7 +189,8 @@ def lifeops_reward_func(
 
 def format_reward_func(prompts, completions, **kwargs) -> List[float]:
     """Reward for strict 2-line formatting + brevity."""
-    return [_format_reward(c) for c in completions]
+    tok = kwargs.get("processing_class") or kwargs.get("tokenizer")
+    return [_format_reward(c, tokenizer=tok) for c in completions]
 
 
 def _build_grpo_config(**kwargs):

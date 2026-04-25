@@ -87,11 +87,84 @@ _SPILL_MARKERS = (
 )
 
 
-def strip_generative_spill(text: str) -> str:
+def coerce_completion_text(completion: object, tokenizer: object = None) -> str:
+    """
+    Normalize TRL / Unsloth completion payloads to a single string.
+
+    In conversational mode, TRL often passes each completion as a list of chat
+    messages (e.g. one assistant message), not a raw string — that must be handled
+    before regex-based reward code runs.
+    """
+    if completion is None:
+        return ""
+    if isinstance(completion, str):
+        return completion
+    if isinstance(completion, dict):
+        return coerce_completion_text([completion], tokenizer=tokenizer)
+
+    try:
+        import torch
+
+        if isinstance(completion, torch.Tensor):
+            completion = completion.detach().cpu().tolist()
+    except Exception:
+        pass
+
+    if hasattr(completion, "tolist") and not isinstance(completion, (str, bytes, dict, list, tuple)):
+        try:
+            completion = completion.tolist()
+        except Exception:
+            pass
+
+    if isinstance(completion, (list, tuple)):
+        if not completion:
+            return ""
+        # Conversational: list[dict] — prefer last assistant/model message content
+        if isinstance(completion[0], dict):
+            for msg in reversed(completion):
+                role = str(msg.get("role", "")).strip().lower()
+                if role in ("assistant", "model"):
+                    content = msg.get("content", "")
+                    if isinstance(content, str):
+                        return content
+                    if isinstance(content, list):
+                        pieces: list[str] = []
+                        for part in content:
+                            if isinstance(part, dict) and isinstance(part.get("text"), str):
+                                pieces.append(part["text"])
+                            elif isinstance(part, str):
+                                pieces.append(part)
+                        if pieces:
+                            return "\n".join(pieces)
+                    return coerce_completion_text(content, tokenizer=tokenizer)
+            parts: list[str] = []
+            for msg in completion:
+                c = msg.get("content", "")
+                if isinstance(c, str) and c.strip():
+                    parts.append(c)
+            return "\n".join(parts) if parts else ""
+
+        if len(completion) == 1 and not isinstance(completion[0], int):
+            return coerce_completion_text(completion[0], tokenizer=tokenizer)
+
+        if all(isinstance(x, int) for x in completion):
+            if tokenizer is not None and hasattr(tokenizer, "decode"):
+                return tokenizer.decode(list(completion), skip_special_tokens=True)
+            return ""
+
+        if all(isinstance(x, str) for x in completion):
+            avg = sum(len(x) for x in completion) / len(completion)
+            return "\n".join(completion) if avg > 1.5 else "".join(completion)
+
+    return str(completion)
+
+
+def strip_generative_spill(text: object, tokenizer: object = None) -> str:
     """
     Models often keep "helpfully" continuing as chat after the 2-line answer.
     For env scoring, keep only the prefix before obvious multi-turn spill markers.
     """
+    text = coerce_completion_text(text, tokenizer=tokenizer)
     if not text:
         return text
     lower = text.lower()
