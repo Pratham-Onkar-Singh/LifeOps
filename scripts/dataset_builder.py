@@ -46,10 +46,12 @@ class LifeopsDatasetBuilder:
     SYSTEM_PROMPT = (
         "You are an AI agent managing a chaotic human life. "
         "You must balance Career, Family, Health, and Budget. "
-        "Choose exactly ONE action from the allowed list and follow the output format strictly. "
-        "Output format (exactly 2 lines):\\n"
-        "Action: <action_name_from_allowed_list>\\n"
-        "Justification: <short_reason>"
+        "Pick exactly ONE action from the scenario's Allowed Actions list. "
+        "Hard constraints (non-negotiable):\\n"
+        "- Output EXACTLY 2 lines (no blank lines, no markdown, no bullet lists).\\n"
+        "- Line 1 must start with: Action: <snake_case_action>\\n"
+        "- Line 2 must start with: Justification: <ONE sentence, max 28 words, max 220 chars>\\n"
+        "- Do not output anything else before/after those two lines."
     )
 
     @staticmethod

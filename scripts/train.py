@@ -71,10 +71,83 @@ except ImportError:
 
 def _extract_action_name(text: str) -> Optional[str]:
     """Extract Action value and normalize spaces/hyphens to enum style."""
-    match = re.search(r"Action\s*:\s*([a-zA-Z_ -]+)", text, re.IGNORECASE)
-    if not match:
+    m = re.search(r"^\s*Action\s*:\s*([a-zA-Z0-9_ -]+)\s*$", text, re.IGNORECASE | re.MULTILINE)
+    if not m:
         return None
-    return re.sub(r"[\s-]+", "_", match.group(1).strip().lower())
+    return re.sub(r"[\s-]+", "_", m.group(1).strip().lower())
+
+
+def _coerce_prompt_text(prompt: object) -> Optional[str]:
+    if prompt is None:
+        return None
+    if isinstance(prompt, str):
+        return prompt
+    # Common HF datasets use conversational message lists.
+    if isinstance(prompt, list) and prompt and isinstance(prompt[0], dict):
+        parts: List[str] = []
+        for msg in prompt:
+            role = str(msg.get("role", "")).strip()
+            content = msg.get("content", "")
+            if isinstance(content, str):
+                parts.append(f"{role}:\n{content}".strip())
+            else:
+                parts.append(f"{role}:\n{str(content)}".strip())
+        return "\n\n".join([p for p in parts if p])
+    return str(prompt)
+
+
+def _parse_allowed_actions(prompt: Optional[str]) -> Optional[set]:
+    if not prompt:
+        return None
+    prompt = _coerce_prompt_text(prompt)
+    if not prompt:
+        return None
+    m = re.search(r"Allowed Actions:\s*([^\n]+)", prompt, re.IGNORECASE)
+    if not m:
+        return None
+    parts = [p.strip() for p in m.group(1).split(",") if p.strip()]
+    return set(parts) if parts else None
+
+
+def _format_reward(text: str) -> float:
+    """Stronger format shaping in roughly [-3, +2]."""
+    score = 0.0
+    lines = [ln.rstrip() for ln in text.splitlines()]
+    lines = [ln for ln in lines if ln.strip() != ""]
+
+    if len(lines) == 2:
+        score += 0.6
+    else:
+        score -= 1.2
+
+    if len(lines) >= 1 and re.match(r"^\s*Action\s*:\s*\S", lines[0], re.IGNORECASE):
+        score += 0.4
+    else:
+        score -= 0.8
+
+    if len(lines) >= 2 and re.match(r"^\s*Justification\s*:\s*\S", lines[1], re.IGNORECASE):
+        score += 0.4
+    else:
+        score -= 0.8
+
+    if len(lines) >= 2:
+        just_line = lines[1]
+        m = re.match(r"^\s*Justification\s*:\s*(.+)\s*$", just_line, re.IGNORECASE)
+        if m:
+            body = m.group(1).strip()
+            if "\n" in body:
+                score -= 1.0
+            wc = len(body.split())
+            if wc > 28:
+                score -= min(2.0, 0.08 * (wc - 28))
+            if len(body) > 220:
+                score -= min(2.0, 0.01 * (len(body) - 220))
+
+    if re.search(r"\b(however|therefore|moreover|additionally)\b", text, re.IGNORECASE):
+        score -= 0.35
+
+    return float(max(-3.0, min(2.0, score)))
+
 
 def lifeops_reward_func(prompts, completions, **kwargs) -> List[float]:
     """
@@ -82,12 +155,25 @@ def lifeops_reward_func(prompts, completions, **kwargs) -> List[float]:
     """
     rewards = []
     env = LifeopsEnvironment()
+
+    if prompts is None:
+        prompts = kwargs.get("prompts")
     
-    for completion in completions:
+    for idx, completion in enumerate(completions):
+        prompt = None
+        if prompts is not None and idx < len(prompts):
+            prompt = prompts[idx]
+
+        allowed = _parse_allowed_actions(prompt)
         action_str = _extract_action_name(completion)
         if not action_str:
-            rewards.append(-1.0)  # Penalty for formatting failure
+            rewards.append(-2.0)
             continue
+
+        if allowed is not None and action_str not in allowed:
+            rewards.append(-2.0)
+            continue
+
         try:
             choice = LifeActionChoice(action_str)
             action = LifeopsAction(choice=choice, justification="RL Training")
@@ -101,14 +187,8 @@ def lifeops_reward_func(prompts, completions, **kwargs) -> List[float]:
 
 
 def format_reward_func(prompts, completions, **kwargs) -> List[float]:
-    """Reward for adhering to 'Action: <choice>\nJustification: <text>' format."""
-    rewards = []
-    for completion in completions:
-        if "Action:" in completion and "Justification:" in completion:
-            rewards.append(1.0)
-        else:
-            rewards.append(0.0)
-    return rewards
+    """Reward for strict 2-line formatting + brevity."""
+    return [_format_reward(c) for c in completions]
 
 
 def _build_grpo_config(**kwargs):
@@ -146,6 +226,11 @@ def run_training(
         logging_steps=10,
         max_prompt_length=256,
         max_completion_length=128,
+        temperature=0.7,
+        top_p=0.9,
+        repetition_penalty=1.08,
+        mask_truncated_completions=True,
+        reward_weights=[1.0, 0.45],
         num_generations=8,
         push_to_hub=push_to_hub,
         hub_model_id=hf_repo_id,
