@@ -60,7 +60,8 @@ try:
     from models import LifeopsAction, LifeActionChoice
     from scripts.dataset_builder import LifeopsDatasetBuilder
     from scripts.rl_action_utils import (
-        parse_allowed_actions,
+        resolve_allowed_actions,
+        strip_generative_spill,
         extract_raw_action_phrase,
         map_phrase_to_allowed_action,
         action_line_is_snake_enum,
@@ -71,7 +72,8 @@ except ImportError:
     from models import LifeopsAction, LifeActionChoice
     from scripts.dataset_builder import LifeopsDatasetBuilder
     from scripts.rl_action_utils import (
-        parse_allowed_actions,
+        resolve_allowed_actions,
+        strip_generative_spill,
         extract_raw_action_phrase,
         map_phrase_to_allowed_action,
         action_line_is_snake_enum,
@@ -84,6 +86,14 @@ except ImportError:
 def _format_reward(text: str) -> float:
     """Stronger format shaping in roughly [-3, +2]."""
     score = 0.0
+    text = strip_generative_spill(text)
+    if re.search(r"(?im)\b(human|assistant|user|system)\s*:", text):
+        score -= 1.0
+    if len(re.findall(r"(?im)^\s*action\s*:", text)) > 1:
+        score -= 0.8
+    if len(re.findall(r"(?im)^\s*justification\s*:", text)) > 1:
+        score -= 0.8
+
     lines = [ln.rstrip() for ln in text.splitlines()]
     lines = [ln for ln in lines if ln.strip() != ""]
 
@@ -129,7 +139,12 @@ def _format_reward(text: str) -> float:
     return float(max(-3.0, min(2.0, score)))
 
 
-def lifeops_reward_func(prompts, completions, **kwargs) -> List[float]:
+def lifeops_reward_func(
+    prompts,
+    completions,
+    allowed_actions_json=None,
+    **kwargs,
+) -> List[float]:
     """
     Primary Reward: Uses the LifeOps environment to evaluate outcomes.
     """
@@ -138,14 +153,21 @@ def lifeops_reward_func(prompts, completions, **kwargs) -> List[float]:
 
     if prompts is None:
         prompts = kwargs.get("prompts")
+    if allowed_actions_json is None:
+        allowed_actions_json = kwargs.get("allowed_actions_json")
     
     for idx, completion in enumerate(completions):
         prompt = None
         if prompts is not None and idx < len(prompts):
             prompt = prompts[idx]
 
-        allowed = parse_allowed_actions(prompt)
-        phrase = extract_raw_action_phrase(completion)
+        allowed_blob = None
+        if allowed_actions_json is not None and idx < len(allowed_actions_json):
+            allowed_blob = allowed_actions_json[idx]
+
+        allowed = resolve_allowed_actions(prompt=prompt, allowed_actions_json=allowed_blob)
+        cleaned = strip_generative_spill(completion)
+        phrase = extract_raw_action_phrase(cleaned)
         mapped, map_pen = map_phrase_to_allowed_action(phrase or "", allowed)
         if not mapped:
             rewards.append(-2.0)
@@ -208,6 +230,7 @@ def run_training(
         repetition_penalty=1.08,
         mask_truncated_completions=True,
         reward_weights=[1.0, 0.45],
+        remove_unused_columns=False,
         num_generations=8,
         push_to_hub=push_to_hub,
         hub_model_id=hf_repo_id,

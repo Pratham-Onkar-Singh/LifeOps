@@ -57,10 +57,13 @@ class LifeopsDatasetBuilder:
     )
 
     @staticmethod
-    def generate_rl_dataset(num_samples: int = 100) -> List[Dict[str, str]]:
+    def generate_rl_dataset(num_samples: int = 100) -> List[Dict]:
         """
         Generates a list of prompts for RL training (GRPO/PPO).
         Each sample contains a system prompt and a user prompt (scenario).
+
+        It also includes small structured fields so reward code does not need to
+        re-parse long prompts (more reliable on Colab / TRL).
         """
         dataset = []
         base_time = datetime(2026, 4, 25, 9, 0)
@@ -78,12 +81,19 @@ class LifeopsDatasetBuilder:
                 f"\nWhat is your next move?"
             )
             
-            dataset.append({
-                "prompt": [
-                    {"role": "system", "content": LifeopsDatasetBuilder.SYSTEM_PROMPT},
-                    {"role": "user", "content": user_prompt}
-                ]
-            })
+            allowed = [choice.value for choice in scenario.valid_choices]
+
+            dataset.append(
+                {
+                    "prompt": [
+                        {"role": "system", "content": LifeopsDatasetBuilder.SYSTEM_PROMPT},
+                        {"role": "user", "content": user_prompt},
+                    ],
+                    # Structured fields for reward functions / debugging
+                    "scenario_id": scenario.id,
+                    "allowed_actions_json": json.dumps(allowed),
+                }
+            )
             
         return dataset
 

@@ -6,6 +6,7 @@
 
 from __future__ import annotations
 
+import json
 import re
 from typing import Iterable, Optional, Tuple
 
@@ -37,6 +38,76 @@ def parse_allowed_actions(prompt: object) -> Optional[set[str]]:
         return None
     parts = [p.strip() for p in m.group(1).split(",") if p.strip()]
     return set(parts) if parts else None
+
+
+def parse_allowed_actions_json(blob: object) -> Optional[set[str]]:
+    """
+    Parse allowed actions from a JSON array string, e.g. '["stay_late_work", ...]'.
+    """
+    if blob is None:
+        return None
+    if isinstance(blob, list):
+        items = [str(x).strip() for x in blob if str(x).strip()]
+        return set(items) if items else None
+    if not isinstance(blob, str) or not blob.strip():
+        return None
+    try:
+        data = json.loads(blob)
+    except Exception:
+        return None
+    if not isinstance(data, list):
+        return None
+    items = [str(x).strip() for x in data if str(x).strip()]
+    return set(items) if items else None
+
+
+def resolve_allowed_actions(
+    *,
+    prompt: object,
+    allowed_actions_json: object = None,
+) -> Optional[set[str]]:
+    """
+    Prefer structured JSON (dataset column). Fall back to parsing the prompt text.
+    """
+    allowed = parse_allowed_actions_json(allowed_actions_json)
+    if allowed:
+        return allowed
+    return parse_allowed_actions(prompt)
+
+
+_SPILL_MARKERS = (
+    "\nHuman:",
+    "\nAssistant:",
+    "\nUser:",
+    "\nSystem:",
+    "\nObservation:",
+    "\nThought:",
+    "\nAction:",
+    "\nJustification:",
+)
+
+
+def strip_generative_spill(text: str) -> str:
+    """
+    Models often keep "helpfully" continuing as chat after the 2-line answer.
+    For env scoring, keep only the prefix before obvious multi-turn spill markers.
+    """
+    if not text:
+        return text
+    lower = text.lower()
+    cut = len(text)
+    for marker in _SPILL_MARKERS:
+        idx = lower.find(marker.lower())
+        if idx != -1 and idx < cut:
+            cut = idx
+    trimmed = text[:cut].strip()
+
+    # If we cut inside the justification line, try to keep full first two lines only.
+    lines = [ln.rstrip() for ln in trimmed.splitlines()]
+    lines = [ln for ln in lines if ln.strip() != ""]
+    if len(lines) >= 2:
+        return f"{lines[0].strip()}\n{lines[1].strip()}".strip()
+    return trimmed
 
 
 def _phrase_to_snake(phrase: str) -> str:
