@@ -51,6 +51,8 @@ class LifeopsDatasetBuilder:
         "- Output EXACTLY 2 lines (no blank lines, no markdown, no bullet lists).\\n"
         "- Line 1 must start with: Action: <snake_case_action>\\n"
         "- Line 2 must start with: Justification: <ONE sentence, max 28 words, max 220 chars>\\n"
+        "- The action MUST be copied verbatim from Allowed Actions (lowercase snake_case).\\n"
+        "- Do NOT invent new action names like 'Prioritize ...' or 'Attend ...'.\\n"
         "- Do not output anything else before/after those two lines."
     )
 

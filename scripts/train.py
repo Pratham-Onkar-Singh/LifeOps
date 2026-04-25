@@ -59,55 +59,27 @@ try:
     from server.lifeops_environment import LifeopsEnvironment
     from models import LifeopsAction, LifeActionChoice
     from scripts.dataset_builder import LifeopsDatasetBuilder
+    from scripts.rl_action_utils import (
+        parse_allowed_actions,
+        extract_raw_action_phrase,
+        map_phrase_to_allowed_action,
+        action_line_is_snake_enum,
+    )
 except ImportError:
     sys.path.append(os.getcwd())
     from server.lifeops_environment import LifeopsEnvironment
     from models import LifeopsAction, LifeActionChoice
     from scripts.dataset_builder import LifeopsDatasetBuilder
+    from scripts.rl_action_utils import (
+        parse_allowed_actions,
+        extract_raw_action_phrase,
+        map_phrase_to_allowed_action,
+        action_line_is_snake_enum,
+    )
 
 
 
 # --- Reward Functions ---
-
-def _extract_action_name(text: str) -> Optional[str]:
-    """Extract Action value and normalize spaces/hyphens to enum style."""
-    m = re.search(r"^\s*Action\s*:\s*([a-zA-Z0-9_ -]+)\s*$", text, re.IGNORECASE | re.MULTILINE)
-    if not m:
-        return None
-    return re.sub(r"[\s-]+", "_", m.group(1).strip().lower())
-
-
-def _coerce_prompt_text(prompt: object) -> Optional[str]:
-    if prompt is None:
-        return None
-    if isinstance(prompt, str):
-        return prompt
-    # Common HF datasets use conversational message lists.
-    if isinstance(prompt, list) and prompt and isinstance(prompt[0], dict):
-        parts: List[str] = []
-        for msg in prompt:
-            role = str(msg.get("role", "")).strip()
-            content = msg.get("content", "")
-            if isinstance(content, str):
-                parts.append(f"{role}:\n{content}".strip())
-            else:
-                parts.append(f"{role}:\n{str(content)}".strip())
-        return "\n\n".join([p for p in parts if p])
-    return str(prompt)
-
-
-def _parse_allowed_actions(prompt: Optional[str]) -> Optional[set]:
-    if not prompt:
-        return None
-    prompt = _coerce_prompt_text(prompt)
-    if not prompt:
-        return None
-    m = re.search(r"Allowed Actions:\s*([^\n]+)", prompt, re.IGNORECASE)
-    if not m:
-        return None
-    parts = [p.strip() for p in m.group(1).split(",") if p.strip()]
-    return set(parts) if parts else None
-
 
 def _format_reward(text: str) -> float:
     """Stronger format shaping in roughly [-3, +2]."""
@@ -124,6 +96,10 @@ def _format_reward(text: str) -> float:
         score += 0.4
     else:
         score -= 0.8
+
+    raw_action = extract_raw_action_phrase(text)
+    if raw_action and not action_line_is_snake_enum(raw_action):
+        score -= 0.9
 
     if len(lines) >= 2 and re.match(r"^\s*Justification\s*:\s*\S", lines[1], re.IGNORECASE):
         score += 0.4
@@ -142,6 +118,10 @@ def _format_reward(text: str) -> float:
                 score -= min(2.0, 0.08 * (wc - 28))
             if len(body) > 220:
                 score -= min(2.0, 0.01 * (len(body) - 220))
+            sentences = re.split(r"(?<=[.!?])\s+", body)
+            sentences = [s for s in sentences if s.strip()]
+            if len(sentences) > 1:
+                score -= 0.7
 
     if re.search(r"\b(however|therefore|moreover|additionally)\b", text, re.IGNORECASE):
         score -= 0.35
@@ -164,22 +144,19 @@ def lifeops_reward_func(prompts, completions, **kwargs) -> List[float]:
         if prompts is not None and idx < len(prompts):
             prompt = prompts[idx]
 
-        allowed = _parse_allowed_actions(prompt)
-        action_str = _extract_action_name(completion)
-        if not action_str:
-            rewards.append(-2.0)
-            continue
-
-        if allowed is not None and action_str not in allowed:
+        allowed = parse_allowed_actions(prompt)
+        phrase = extract_raw_action_phrase(completion)
+        mapped, map_pen = map_phrase_to_allowed_action(phrase or "", allowed)
+        if not mapped:
             rewards.append(-2.0)
             continue
 
         try:
-            choice = LifeActionChoice(action_str)
+            choice = LifeActionChoice(mapped)
             action = LifeopsAction(choice=choice, justification="RL Training")
             env.reset()
             obs = env.step(action)
-            rewards.append(obs.reward)
+            rewards.append(float(obs.reward) + float(map_pen))
         except ValueError:
             rewards.append(-2.0)  # Penalty for invalid action names
             
