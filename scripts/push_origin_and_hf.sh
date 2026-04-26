@@ -9,5 +9,7 @@ if ! git remote get-url hf >/dev/null 2>&1; then
   exit 1
 fi
 git push origin "$BRANCH"
-git push hf "$BRANCH"
-echo "Pushed branch '$BRANCH' to origin and hf."
+# HF Hub rejects normal pushes when history contains blocked binaries; use snapshot script.
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+bash "$SCRIPT_DIR/push_hf_space.sh" "$BRANCH"
+echo "Pushed branch '$BRANCH' to origin and hf (snapshot)."

@@ -15,6 +15,10 @@ if ($remotes -notcontains "hf") {
 }
 git push origin $Branch
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-git push hf $Branch
+
+# HF Hub often rejects a normal `git push hf main` when old commits contain blocked binaries (PDFs).
+# Use a single-commit snapshot so the Space only sees the current tree.
+$scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+& "$scriptDir/push_hf_space.ps1" $Branch
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-Write-Host "Pushed branch '$Branch' to origin and hf."
+Write-Host "Pushed branch '$Branch' to origin and hf (snapshot)."

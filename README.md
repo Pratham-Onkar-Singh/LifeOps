@@ -84,7 +84,9 @@ git push origin main
 git push hf main
 ```
 
-HF will rebuild the Space from the new commit on `hf` (same as pushing from the Space’s Git UI). Use a [HF token with write](https://huggingface.co/settings/tokens) if `git push hf` asks for credentials.
+HF will rebuild the Space from the new commit on `hf`. The Hub often **rejects a normal `git push hf main`** if your Git history still contains blocked binaries (for example old PDFs), even when those files are no longer tracked. The helper scripts push a **single-commit snapshot** to `hf` instead (`scripts/push_hf_space.ps1` / `push_hf_space.sh`).
+
+Use a [HF token with write](https://huggingface.co/settings/tokens) if `git push hf` asks for credentials.
 
 ## 🚀 Quick Start (Agent Interaction)
 
