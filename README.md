@@ -61,6 +61,31 @@ os.environ["LIFEOPS_ENV_URL"] = "https://YOUR_USERNAME-YOUR_SPACENAME.hf.space"
 
 Use **no trailing slash**. Training skips starting a local server when the URL contains `hf.space` (or `huggingface.co`).
 
+### Push to GitHub and your Hugging Face Space
+
+If you use a **second Git remote** for the Space (convention: name it `hf`):
+
+```bash
+git remote add hf https://huggingface.co/spaces/YOUR_USER/YOUR_SPACE.git
+```
+
+Then push **both** remotes in one go (from repo root):
+
+- **Git Bash / WSL / macOS / Linux:** `bash scripts/push_origin_and_hf.sh`  
+  Optional branch: `bash scripts/push_origin_and_hf.sh main`
+
+- **PowerShell:** `powershell -ExecutionPolicy Bypass -File scripts/push_origin_and_hf.ps1`  
+  Optional branch: `... -File scripts/push_origin_and_hf.ps1 main`
+
+Or manually each time:
+
+```bash
+git push origin main
+git push hf main
+```
+
+HF will rebuild the Space from the new commit on `hf` (same as pushing from the Space’s Git UI). Use a [HF token with write](https://huggingface.co/settings/tokens) if `git push hf` asks for credentials.
+
 ## 🚀 Quick Start (Agent Interaction)
 
 ```python
