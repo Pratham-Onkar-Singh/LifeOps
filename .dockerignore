@@ -1,4 +1,7 @@
 .git
+# PDFs stay on disk locally; do not ship in the image
+*.pdf
+**/*.pdf
 **/__pycache__
 **/.pytest_cache
 **/*.pyc
