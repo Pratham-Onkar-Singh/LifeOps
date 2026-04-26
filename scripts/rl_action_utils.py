@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 import json
+import math
 import re
 from typing import Iterable, Optional, Tuple
 
@@ -377,3 +378,19 @@ def compute_format_reward(text: object, tokenizer: object = None) -> float:
         score -= 0.35
 
     return float(max(-3.0, min(2.0, score)))
+
+
+def normalize_lifeops_env_reward(raw: float, scale: float = 5.0) -> float:
+    """
+    Map open-ended LifeOps step totals into (0, 1) with a **monotonic** logistic curve.
+    Keeps ordering (higher raw → higher unit), which GRPO needs; use for logging and
+    training when you want rewards on the same scale as a 0–1 grader-style signal.
+    """
+    x = float(raw) / float(scale)
+    return float(1.0 / (1.0 + math.exp(-x)))
+
+
+def normalize_format_reward_unit(raw_score: float) -> float:
+    """Map `compute_format_reward` range roughly [-3, 2] into [0, 1]."""
+    u = (float(raw_score) + 3.0) / 5.0
+    return float(max(0.0, min(1.0, u)))

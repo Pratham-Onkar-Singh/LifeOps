@@ -66,6 +66,8 @@ try:
         action_line_is_snake_enum,
         extract_justification_phrase,
         compute_format_reward,
+        normalize_lifeops_env_reward,
+        normalize_format_reward_unit,
     )
 except ImportError:
     sys.path.append(os.getcwd())
@@ -80,6 +82,8 @@ except ImportError:
         action_line_is_snake_enum,
         extract_justification_phrase,
         compute_format_reward,
+        normalize_lifeops_env_reward,
+        normalize_format_reward_unit,
     )
 
 
@@ -119,7 +123,7 @@ def lifeops_reward_func(
         phrase = extract_raw_action_phrase(cleaned)
         mapped, map_pen = map_phrase_to_allowed_action(phrase or "", allowed)
         if not mapped:
-            rewards.append(-2.0)
+            rewards.append(normalize_lifeops_env_reward(-2.0))
             continue
 
         try:
@@ -128,17 +132,21 @@ def lifeops_reward_func(
             action = LifeopsAction(choice=choice, justification=justification)
             env.reset()
             obs = env.step(action)
-            rewards.append(float(obs.reward) + float(map_pen))
+            raw = float(obs.reward) + float(map_pen)
+            rewards.append(normalize_lifeops_env_reward(raw))
         except ValueError:
-            rewards.append(-2.0)  # Penalty for invalid action names
+            rewards.append(normalize_lifeops_env_reward(-2.0))
             
     return rewards
 
 
 def format_reward_func(prompts, completions, **kwargs) -> List[float]:
-    """Reward for strict 2-line formatting + brevity."""
+    """Reward for strict 2-line formatting + brevity (0–1)."""
     tok = kwargs.get("processing_class") or kwargs.get("tokenizer")
-    return [compute_format_reward(c, tokenizer=tok) for c in completions]
+    return [
+        normalize_format_reward_unit(compute_format_reward(c, tokenizer=tok))
+        for c in completions
+    ]
 
 
 def _build_grpo_config(**kwargs):
@@ -180,7 +188,7 @@ def run_training(
         top_p=0.9,
         repetition_penalty=1.08,
         mask_truncated_completions=True,
-        reward_weights=[1.0, 0.45],
+        reward_weights=[1.0 / 1.45, 0.45 / 1.45],
         remove_unused_columns=False,
         num_generations=8,
         push_to_hub=push_to_hub,
