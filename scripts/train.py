@@ -10,7 +10,6 @@ Uses GRPO (Group Relative Policy Optimization) with Unsloth for efficient RL.
 """
 
 import torch
-import re
 import inspect
 from typing import List, Dict, Optional
 from datetime import datetime
@@ -65,6 +64,8 @@ try:
         extract_raw_action_phrase,
         map_phrase_to_allowed_action,
         action_line_is_snake_enum,
+        extract_justification_phrase,
+        compute_format_reward,
     )
 except ImportError:
     sys.path.append(os.getcwd())
@@ -77,72 +78,13 @@ except ImportError:
         extract_raw_action_phrase,
         map_phrase_to_allowed_action,
         action_line_is_snake_enum,
+        extract_justification_phrase,
+        compute_format_reward,
     )
 
 
 
 # --- Reward Functions ---
-
-def _format_reward(text: object, tokenizer=None) -> float:
-    """Stronger format shaping in roughly [-3, +2]."""
-    score = 0.0
-    text = strip_generative_spill(text, tokenizer=tokenizer)
-    if re.search(r"(?im)\b(human|assistant|user|system)\s*:", text):
-        score -= 1.0
-    if len(re.findall(r"(?im)^\s*action\s*:", text)) > 1:
-        score -= 0.8
-    if len(re.findall(r"(?im)^\s*justification\s*:", text)) > 1:
-        score -= 0.8
-
-    lines = [ln.rstrip() for ln in text.splitlines()]
-    lines = [ln for ln in lines if ln.strip() != ""]
-
-    # Line-count shaping: do NOT stack "not 2 lines" + "no justification" on 1-liners
-    # (that froze all single-line samples at the same -1.6 and killed GRPO variance).
-    if len(lines) == 2:
-        score += 0.6
-    elif len(lines) == 1:
-        score -= 0.3
-    else:
-        score -= 1.0
-
-    if len(lines) >= 1 and re.match(r"^\s*Action\s*:\s*\S", lines[0], re.IGNORECASE):
-        score += 0.4
-    else:
-        score -= 0.8
-
-    raw_action = extract_raw_action_phrase(text)
-    if raw_action and not action_line_is_snake_enum(raw_action):
-        score -= 0.9
-
-    if len(lines) >= 2:
-        if re.match(r"^\s*Justification\s*:\s*\S", lines[1], re.IGNORECASE):
-            score += 0.4
-        else:
-            score -= 0.45
-
-    if len(lines) >= 2:
-        just_line = lines[1]
-        m = re.match(r"^\s*Justification\s*:\s*(.+)\s*$", just_line, re.IGNORECASE)
-        if m:
-            body = m.group(1).strip()
-            if "\n" in body:
-                score -= 1.0
-            wc = len(body.split())
-            if wc > 28:
-                score -= min(2.0, 0.08 * (wc - 28))
-            if len(body) > 220:
-                score -= min(2.0, 0.01 * (len(body) - 220))
-            sentences = re.split(r"(?<=[.!?])\s+", body)
-            sentences = [s for s in sentences if s.strip()]
-            if len(sentences) > 1:
-                score -= 0.7
-
-    if re.search(r"\b(however|therefore|moreover|additionally)\b", text, re.IGNORECASE):
-        score -= 0.35
-
-    return float(max(-3.0, min(2.0, score)))
-
 
 def lifeops_reward_func(
     prompts,
@@ -182,7 +124,8 @@ def lifeops_reward_func(
 
         try:
             choice = LifeActionChoice(mapped)
-            action = LifeopsAction(choice=choice, justification="RL Training")
+            justification = extract_justification_phrase(cleaned, tokenizer=tok) or " "
+            action = LifeopsAction(choice=choice, justification=justification)
             env.reset()
             obs = env.step(action)
             rewards.append(float(obs.reward) + float(map_pen))
@@ -195,7 +138,7 @@ def lifeops_reward_func(
 def format_reward_func(prompts, completions, **kwargs) -> List[float]:
     """Reward for strict 2-line formatting + brevity."""
     tok = kwargs.get("processing_class") or kwargs.get("tokenizer")
-    return [_format_reward(c, tokenizer=tok) for c in completions]
+    return [compute_format_reward(c, tokenizer=tok) for c in completions]
 
 
 def _build_grpo_config(**kwargs):

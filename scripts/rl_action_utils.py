@@ -75,6 +75,8 @@ def resolve_allowed_actions(
     return parse_allowed_actions(prompt)
 
 
+# NOTE: Do not include "\nJustification:" or the leading line's "\nAction:" as spill —
+# the task requires exactly those lines. (A second "\nAction:" is still a useful spill cue.)
 _SPILL_MARKERS = (
     "\nHuman:",
     "\nAssistant:",
@@ -83,7 +85,6 @@ _SPILL_MARKERS = (
     "\nObservation:",
     "\nThought:",
     "\nAction:",
-    "\nJustification:",
 )
 
 
@@ -283,3 +284,96 @@ def action_line_is_snake_enum(action_phrase: str) -> bool:
     if not re.fullmatch(r"[A-Za-z0-9_]+", s):
         return False
     return "_" in s and s == s.lower()
+
+
+def extract_justification_phrase(
+    text: object,
+    tokenizer: object = None,
+) -> str:
+    """
+    Text after the first 'Justification:' line, from a stripped completion.
+    The environment's parser uses this (tool routing, etc.), so it must be the
+    model's actual line — not a constant placeholder.
+    """
+    s = strip_generative_spill(text, tokenizer=tokenizer)
+    if not s:
+        return ""
+    lines = [ln.rstrip() for ln in s.splitlines()]
+    lines = [ln for ln in lines if ln.strip() != ""]
+    if len(lines) >= 2:
+        m2 = re.match(
+            r"^\s*Justification\s*:\s*(.*)$", lines[1], re.IGNORECASE
+        )
+        if m2:
+            return m2.group(1).strip()
+    m = re.search(r"(?im)^\s*Justification\s*:\s*(.+)$", s, re.MULTILINE)
+    if m:
+        return m.group(1).strip()
+    return ""
+
+
+def compute_format_reward(text: object, tokenizer: object = None) -> float:
+    """
+    Format shaping in roughly [-3, +2] for GRPO. Kept in sync with training scripts
+    (role spill, duplicate lines, 2-line structure) to avoid a degenerate mode where
+    every sample shares the same score and group-relative advantage is zero.
+    """
+    score = 0.0
+    text = strip_generative_spill(text, tokenizer=tokenizer)
+    if re.search(r"(?im)\b(human|assistant|user|system)\s*:", str(text or "")):
+        score -= 1.0
+    if len(re.findall(r"(?im)^\s*action\s*:", str(text or ""))) > 1:
+        score -= 0.8
+    if len(re.findall(r"(?im)^\s*justification\s*:", str(text or ""))) > 1:
+        score -= 0.8
+
+    lines = [ln.rstrip() for ln in str(text or "").splitlines()]
+    lines = [ln for ln in lines if ln.strip() != ""]
+
+    if len(lines) == 2:
+        score += 0.6
+    elif len(lines) == 1:
+        score -= 0.3
+    else:
+        score -= 1.0
+
+    if len(lines) >= 1 and re.match(r"^\s*Action\s*:\s*\S", lines[0], re.IGNORECASE):
+        score += 0.4
+    else:
+        score -= 0.8
+
+    raw_action = extract_raw_action_phrase(str(text or ""))
+    if raw_action and not action_line_is_snake_enum(raw_action):
+        score -= 0.9
+
+    if len(lines) >= 2:
+        if re.match(r"^\s*Justification\s*:\s*\S", lines[1], re.IGNORECASE):
+            score += 0.4
+        else:
+            score -= 0.45
+
+    if len(lines) >= 2:
+        just_line = lines[1]
+        m = re.match(
+            r"^\s*Justification\s*:\s*(.+)\s*$", just_line, re.IGNORECASE
+        )
+        if m:
+            body = m.group(1).strip()
+            if "\n" in body:
+                score -= 1.0
+            wc = len(body.split())
+            if wc > 28:
+                score -= min(2.0, 0.08 * (wc - 28))
+            if len(body) > 220:
+                score -= min(2.0, 0.01 * (len(body) - 220))
+            sentences = re.split(r"(?<=[.!?])\s+", body)
+            sentences = [s for s in sentences if s.strip()]
+            if len(sentences) > 1:
+                score -= 0.7
+
+    if re.search(
+        r"\b(however|therefore|moreover|additionally)\b", str(text or ""), re.IGNORECASE
+    ):
+        score -= 0.35
+
+    return float(max(-3.0, min(2.0, score)))
