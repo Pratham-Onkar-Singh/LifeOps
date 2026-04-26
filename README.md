@@ -12,133 +12,117 @@ tags:
   - personalized-tasks
 ---
 
-# 🧬 LifeOps: Training Agents for Chaotic Life Management
+# 🧬 LifeOps: Training LLM Agents for Real-Life Trade-Offs
 
-> **"It's not about being correct; it's about being balanced."**
+> "Most benchmarks ask if the answer is correct. Life asks if the choice is sustainable."
 
-**LifeOps** is a research-grade OpenEnv environment designed to train LLMs in navigating complex, multi-constraint human life conflicts. Unlike simple grid worlds or games, LifeOps simulates the high-stakes trade-offs between career, family, health, and budget.
+LifeOps is an OpenEnv environment where an LLM must balance career, family, health, stress, and budget over time. It is designed for RL fine-tuning with GRPO/TRL + Unsloth.
 
-It was built for the **OpenEnv Hackathon (India 2026)** and aligns with **Theme #3.2: Personalized Tasks**.
+## Submission Links (Judge Quick Access)
 
-## 📖 The Story
-We've all been there: a critical deadline at work vs. a precious moment with family. As humans, we navigate these "chaotic" trade-offs every day. Existing RL environments for LLMs focus on "correct" answers (Math, Code). But real life is messy. LifeOps drops agents into high-pressure human conflicts where the "right" answer depends on long-term sustainability, not just immediate gains.
+- Hugging Face Space (repo): [CodeArtisan09/LifeOps](https://huggingface.co/spaces/CodeArtisan09/LifeOps)
+- Live environment URL: [https://codeartisan09-lifeops.hf.space](https://codeartisan09-lifeops.hf.space)
+- API health check: [https://codeartisan09-lifeops.hf.space/health](https://codeartisan09-lifeops.hf.space/health)
+- Gradio demo UI: [https://codeartisan09-lifeops.hf.space/ui](https://codeartisan09-lifeops.hf.space/ui)
+- Training notebook (Colab-ready): `notebooks/train_lifeops.ipynb`
+- Training script: `scripts/train.py`
+- Technical writeup (mini-blog content): `docs/BLOG.md`
 
-## 🌟 The Mission
-Our mission is to move AI from "Instruction Following" to "Life Management." By training agents in LifeOps, we create assistants that understand **Burnout**, **Relationship Trust**, and **Financial Responsibility**.
+## Why this problem matters
 
-## ☁️ Hugging Face Space (public API for Colab / GRPO)
+Most RL-for-LLM setups optimize a single objective. Real life is multi-objective and stateful:
 
-This repo is a **Docker Space**: the **`Dockerfile` is at the repository root** (required by Hugging Face). The OpenEnv HTTP API is at the **root** of your Space URL (`/health`, `/reset`, `/step`). The Gradio demo is at **`/ui`**.
+- career vs family
+- short-term gain vs burnout
+- money constraints vs social obligations
+- delayed consequences from earlier choices
 
-Official reference: [Docker Spaces](https://huggingface.co/docs/hub/spaces-sdks-docker).
+LifeOps trains policies to make balanced decisions under these constraints.
 
-### Connect your GitHub repo to a Space
+## How the environment works
 
-1. **Link GitHub to Hugging Face** (one-time): open [HF Settings → Connected accounts](https://huggingface.co/settings/connected_accounts) and connect **GitHub** (authorize the Hugging Face app when GitHub asks).
+- Built on `openenv-core` (`openenv-core[core]>=0.2.2`) via OpenEnv interfaces.
+- 24-step episodic lifecycle (1 step = 1 hour) with persistent world state.
+- Scenario generation + action parsing + NPC updates + autonomous world dynamics.
+- Multi-axis reward decomposition in `server/rewards.py`:
+  - career, family, friendship, budget, health
+  - stress penalties, efficiency, communication bonus
+- OpenEnv-compatible API endpoints: `/health`, `/reset`, `/step`.
 
-2. **Create the Space from GitHub**  
-   - Go to [Create a new Space](https://huggingface.co/new-space).  
-   - Choose **Docker** as the SDK.  
-   - Under **Repository**, pick **Import from GitHub** (or your UI’s equivalent: link / import GitHub repository).  
-   - Select your repo (e.g. `Pratham-Onkar-Singh/LifeOps`), branch **`main`**, and create the Space.
+Core files:
 
-3. **If you already created an empty Space**  
-   - Open the Space → **Settings** → find **Repository** / **Git** / **Duplicate or sync** options (wording varies). You can often **change the linked repository** to your GitHub repo, or **duplicate** a Space from GitHub from the Space menu.  
-   - Alternatively, clone the Space with Git, commit, and push (see [Spaces Git](https://huggingface.co/docs/hub/spaces-overview#managing-a-space-with-git)).
+- `server/lifeops_environment.py`
+- `server/rewards.py`
+- `server/parser.py`
+- `server/scenario_generator.py`
+- `server/npc_engine.py`
 
-4. **Wait for the Docker build** on the Space’s **Build** tab. Fix any errors shown in the log (missing deps, wrong port).
+## Training and reproducibility
 
-5. **Smoke test**  
-   - Open `https://YOUR_USERNAME-YOUR_SPACENAME.hf.space/health` — expect **200**.  
-   - Demo UI: `https://YOUR_USERNAME-YOUR_SPACENAME.hf.space/ui`
+- RL stack: TRL GRPO + Unsloth (`unsloth/Qwen2.5-3B-Instruct`).
+- End-to-end notebook pipeline in `notebooks/train_lifeops.ipynb` includes:
+  - dependency install
+  - Space/local environment wiring
+  - normalized reward heads
+  - baseline computation
+  - GRPO training
+  - reward plotting
+  - post-train sanity checks
+  - JSON export
 
-6. **Point Colab at the Space** (before the “Launch LifeOps server” cell in `notebooks/train_lifeops.ipynb`):
+## Evidence of training
+
+Training/evaluation plots currently tracked in repo:
+
+- `data/plots/performance.png`
+- `data/plots/real_model_performance.png`
+
+![Training Curves](data/plots/performance.png)
+![Post-train Performance](data/plots/real_model_performance.png)
+
+The notebook also saves reward-curve outputs under `grpo_out/` when run end-to-end.
+
+## Quick run
+
+### Local
+
+```bash
+python -m server.app
+```
+
+Then verify:
+
+```bash
+curl http://127.0.0.1:7860/health
+```
+
+### Train (notebook)
+
+Open `notebooks/train_lifeops.ipynb` and run all cells.  
+To force remote Space usage, set:
 
 ```python
 import os
-os.environ["LIFEOPS_ENV_URL"] = "https://YOUR_USERNAME-YOUR_SPACENAME.hf.space"
+os.environ["LIFEOPS_ENV_URL"] = "https://codeartisan09-lifeops.hf.space"
 ```
 
-Use **no trailing slash**. Training skips starting a local server when the URL contains `hf.space` (or `huggingface.co`).
+## Push flow
 
-### Push to GitHub and your Hugging Face Space
+- Push GitHub: `git push origin main`
+- Push HF Space (snapshot replace): `powershell -ExecutionPolicy Bypass -File scripts/push_hf_space.ps1 main`
 
-If you use a **second Git remote** for the Space (convention: name it `hf`):
+Use the snapshot script when HF rejects normal pushes due to historical blocked binaries.
 
-```bash
-git remote add hf https://huggingface.co/spaces/YOUR_USER/YOUR_SPACE.git
-```
+## Non-negotiable checklist mapping
 
-Then push **both** remotes in one go (from repo root):
+- OpenEnv-based environment: yes (`openenv-core`, OpenEnv interfaces in server)
+- Working RL training pipeline (Unsloth/TRL): yes (`notebooks/train_lifeops.ipynb`, `scripts/train.py`)
+- Training evidence (plots): included in `data/plots/`
+- Public HF Space deployment: yes (links above)
+- README motivation + environment mechanics + results: yes (this file)
+- README includes HF Space + references: yes
+- No large video files committed: yes (link external media instead)
 
-- **Git Bash / WSL / macOS / Linux:** `bash scripts/push_origin_and_hf.sh`  
-  Optional branch: `bash scripts/push_origin_and_hf.sh main`
+## Optional external media
 
-- **PowerShell:** `powershell -ExecutionPolicy Bypass -File scripts/push_origin_and_hf.ps1`  
-  Optional branch: `... -File scripts/push_origin_and_hf.ps1 main`
-
-Or manually each time:
-
-```bash
-git push origin main
-git push hf main
-```
-
-HF will rebuild the Space from the new commit on `hf`. The Hub often **rejects a normal `git push hf main`** if your Git history still contains blocked binaries (for example old PDFs), even when those files are no longer tracked. The helper scripts push a **single-commit snapshot** to `hf` instead (`scripts/push_hf_space.ps1` / `push_hf_space.sh`).
-
-Use a [HF token with write](https://huggingface.co/settings/tokens) if `git push hf` asks for credentials.
-
-## 🚀 Quick Start (Agent Interaction)
-
-```python
-from client import LifeopsEnv
-from models import LifeopsAction, LifeActionChoice
-
-with LifeopsEnv(base_url="http://localhost:7860") as env:
-    # 1. Start a new chaotic day
-    result = env.reset()
-    print(f"Conflict: {result.observation.active_conflict}")
-    
-    # 2. Make a strategic trade-off
-    action = LifeopsAction(
-        choice=LifeActionChoice.DELEGATE_WORK,
-        justification="I'll pay a colleague to cover the report so I can make it to Mom's dinner."
-    )
-    result = env.step(action)
-    
-    # 3. See the fallout (Metrics & Rewards)
-    obs = result.observation
-    print(f"Outcome: {obs.environment_feedback}")
-    print(f"Metrics: {obs.metrics}")
-    print(f"Reward: {result.reward} (Based on 8-axis Rubric)")
-```
-
-## 🏗️ Architecture
-- **Environment:** Multi-step 24-hour lifecycle with deterministic time advancement.
-- **NPC Engine:** Reactive characters (Boss, Mom, Partner) with Patience, Trust, and Memory.
-- **Reward Engine:** High-signal 8-axis scoring (Career, Family, Stress, Budget, Health, Friendship, Efficiency, Communication).
-- **NLP Fallback:** Robust parsing of natural language into structured actions.
-- **Scenario Generator:** Procedurally generated life events (Work vs Family, Health vs Deadlines).
-
-## 💎 High-Performance Mode (Using HF Credits)
-This project is optimized for the **Hugging Face Ecosystem**.
-
-1.  **L4/A100 Training:** Run the training script on a GPU for 10x faster convergence.
-2.  **Llama-70B Enrichment:** Use the HF Inference API to generate hyper-realistic training data.
-3.  **ZeroGPU Hosting:** The demo is designed to run efficiently on Hugging Face ZeroGPU.
-
-## 📊 Performance Evidence
-Our trained agent demonstrates significantly better balance than baseline heuristics.
-
-![Agent Performance](data/plots/real_model_performance.png)
-
-*The trained model learns to maintain high family affinity while keeping stress levels under the burnout threshold.*
-
-## 📝 Mini-Blog: The Future of Personalized AI
-Imagine an AI that doesn't just remind you of a meeting, but warns you: *"If you take this meeting, your stress level will hit 90% and you'll be too tired for your son's game."* LifeOps is the first step toward that future. By quantifying the "Chaos of Life," we provide the data needed to align LLMs with human values in the real world.
-
-## 📜 Judging Criteria Compliance
-- **Innovation (40%):** Novel "Life Management" domain with rich entity-relationship simulation.
-- **Storytelling (30%):** Engaging scenarios, clear metric impacts, and explainable rewards.
-- **Improvement (20%):** Observable progress curves comparing RL agents against Random/Greedy baselines.
-- **Pipeline (10%):** Coherent GRPO + Unsloth pipeline provided in a one-click Colab notebook.
+If you publish a Hugging Face community blog post or YouTube demo, add links here so judges can access them immediately.
