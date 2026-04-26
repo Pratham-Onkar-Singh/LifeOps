@@ -5,80 +5,48 @@
 # LICENSE file in the root directory of this source tree.
 
 """
-FastAPI application for the Lifeops Environment.
-
-This module creates an HTTP server that exposes the LifeopsEnvironment
-over HTTP and WebSocket endpoints, compatible with EnvClient.
-
-Endpoints:
-    - POST /reset: Reset the environment
-    - POST /step: Execute an action
-    - GET /state: Get current environment state
-    - GET /schema: Get action/observation schemas
-    - WS /ws: WebSocket endpoint for persistent sessions
-
-Usage:
-    # Development (with auto-reload):
-    uvicorn server.app:app --reload --host 0.0.0.0 --port 8000
-
-    # Production:
-    uvicorn server.app:app --host 0.0.0.0 --port 8000 --workers 4
-
-    # Or run directly:
-    python -m server.app
+Integrated FastAPI + Gradio Application for LifeOps.
+This file serves as the main entry point for the Hugging Face Space.
 """
 
-try:
-    from openenv.core.env_server.http_server import create_app
-except Exception as e:  # pragma: no cover
-    raise ImportError(
-        "openenv is required for the web interface. Install dependencies with '\n    uv sync\n'"
-    ) from e
+import os
+import sys
+import uvicorn
+import gradio as gr
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
-try:
-    from ..models import LifeopsAction, LifeopsObservation
-    from .lifeops_environment import LifeopsEnvironment
-except ImportError:
-    from models import LifeopsAction, LifeopsObservation
-    from server.lifeops_environment import LifeopsEnvironment
+# Add parent dir to path
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+from openenv.core.env_server.http_server import create_app
+from models import LifeopsAction, LifeopsObservation
+from server.lifeops_environment import LifeopsEnvironment
 
-# Create the app with web interface and README integration
+# 1. Create the OpenEnv standard FastAPI app
+# This provides /reset, /step, /state, /health
 app = create_app(
     LifeopsEnvironment,
     LifeopsAction,
     LifeopsObservation,
     env_name="lifeops",
-    max_concurrent_envs=1,  # increase this number to allow more concurrent WebSocket sessions
+    max_concurrent_envs=5,
 )
 
+# 2. Build the "Judge-Ready" Gradio UI
+def build_demo():
+    from app.gradio_app import demo as gradio_ui
+    return gradio_ui
 
-def main(host: str = "0.0.0.0", port: int = 8000):
-    """
-    Entry point for direct execution via uv run or python -m.
-
-    This function enables running the server without Docker:
-        uv run --project . server
-        uv run --project . server --port 8001
-        python -m lifeops.server.app
-
-    Args:
-        host: Host address to bind to (default: "0.0.0.0")
-        port: Port number to listen on (default: 8000)
-
-    For production deployments, consider using uvicorn directly with
-    multiple workers:
-        uvicorn lifeops.server.app:app --workers 4
-    """
-    import uvicorn
-
-    uvicorn.run(app, host=host, port=port)
-
+# 3. Mount Gradio onto the FastAPI app
+# Judges can visit the root URL to see the dashboard
+app = gr.mount_gradio_app(app, build_demo(), path="/")
 
 if __name__ == "__main__":
     import argparse
-
     parser = argparse.ArgumentParser()
-    parser.add_argument("--port", type=int, default=8000)
+    parser.add_argument("--port", type=int, default=int(os.environ.get("PORT", 7860)))
     args = parser.parse_args()
-    main(port=args.port)
+    
+    print(f"🚀 LifeOps Production Server starting on port {args.port}")
+    uvicorn.run(app, host="0.0.0.0", port=args.port)

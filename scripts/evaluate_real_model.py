@@ -44,16 +44,21 @@ class RealLLMAgent:
             response = self.client.chat_completion(messages, max_tokens=300)
             text = response.choices[0].message.content
             
-            import re
-            json_match = re.search(r'\{.*\}', text, re.DOTALL)
-            if json_match:
-                data = json.loads(json_match.group(0))
-                choice = LifeActionChoice(data['choice'].strip().lower())
-                
-                # Record this in history for the next step
+            from scripts.rl_action_utils import strip_generative_spill, extract_raw_action_phrase, map_phrase_to_allowed_action, extract_justification_phrase
+            
+            cleaned = strip_generative_spill(text)
+            phrase = extract_raw_action_phrase(cleaned)
+            allowed = [c.value for c in obs.available_choices]
+            mapped, _ = map_phrase_to_allowed_action(phrase or "", allowed)
+            
+            if mapped:
+                justification = extract_justification_phrase(cleaned) or "Balanced decision."
+                choice = LifeActionChoice(mapped)
+                # Record in history
                 self.history.append(f"- At {obs.current_time}, you chose {choice.value}. Result: {obs.environment_feedback}")
-                
-                return LifeopsAction(choice=choice, justification=data['justification'])
+                return LifeopsAction(choice=choice, justification=justification)
+            else:
+                print(f"⚠️ [RealLLMAgent] Could not map response to action: {text[:100]}...")
         except Exception as e:
             print(f"⚠️ [RealLLMAgent] Exception: {e}")
         
