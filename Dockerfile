@@ -4,6 +4,7 @@
 # This source code is licensed under the BSD-style license found in the
 # LICENSE file in the root directory of this source tree.
 
+# Hugging Face Spaces expects Dockerfile at the repository root (see Hub docs).
 # Use a lean Python 3.12 image
 FROM python:3.12-slim
 
@@ -26,7 +27,6 @@ COPY server/requirements.txt requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the entire project
-# We copy to /app and ensure server/ is available
 COPY . .
 
 # Set PYTHONPATH to include the project root
@@ -39,6 +39,5 @@ EXPOSE 7860
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:${PORT}/health || exit 1
 
-# Run the FastAPI server
-# HF Spaces uses port 7860 by default
+# Run the FastAPI server (HF Spaces sets PORT, default 7860)
 CMD ["sh", "-c", "uvicorn server.app:app --host 0.0.0.0 --port ${PORT}"]

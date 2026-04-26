@@ -28,18 +28,38 @@ Our mission is to move AI from "Instruction Following" to "Life Management." By 
 
 ## ☁️ Hugging Face Space (public API for Colab / GRPO)
 
-This repo is a **Docker Space**: OpenEnv HTTP API lives at the **root** of your Space URL (`/health`, `/reset`, `/step`). The Gradio demo is at **`/ui`**.
+This repo is a **Docker Space**: the **`Dockerfile` is at the repository root** (required by Hugging Face). The OpenEnv HTTP API is at the **root** of your Space URL (`/health`, `/reset`, `/step`). The Gradio demo is at **`/ui`**.
 
-1. Create a [new Docker Space](https://huggingface.co/new-space) and connect this GitHub repository (or push a copy).
-2. Wait for the build; open the Space URL and confirm `https://YOUR_SPACE_URL/health` returns 200.
-3. In Colab (or anywhere), set the base URL before training:
+Official reference: [Docker Spaces](https://huggingface.co/docs/hub/spaces-sdks-docker).
+
+### Connect your GitHub repo to a Space
+
+1. **Link GitHub to Hugging Face** (one-time): open [HF Settings → Connected accounts](https://huggingface.co/settings/connected_accounts) and connect **GitHub** (authorize the Hugging Face app when GitHub asks).
+
+2. **Create the Space from GitHub**  
+   - Go to [Create a new Space](https://huggingface.co/new-space).  
+   - Choose **Docker** as the SDK.  
+   - Under **Repository**, pick **Import from GitHub** (or your UI’s equivalent: link / import GitHub repository).  
+   - Select your repo (e.g. `Pratham-Onkar-Singh/LifeOps`), branch **`main`**, and create the Space.
+
+3. **If you already created an empty Space**  
+   - Open the Space → **Settings** → find **Repository** / **Git** / **Duplicate or sync** options (wording varies). You can often **change the linked repository** to your GitHub repo, or **duplicate** a Space from GitHub from the Space menu.  
+   - Alternatively, clone the Space with Git, commit, and push (see [Spaces Git](https://huggingface.co/docs/hub/spaces-overview#managing-a-space-with-git)).
+
+4. **Wait for the Docker build** on the Space’s **Build** tab. Fix any errors shown in the log (missing deps, wrong port).
+
+5. **Smoke test**  
+   - Open `https://YOUR_USERNAME-YOUR_SPACENAME.hf.space/health` — expect **200**.  
+   - Demo UI: `https://YOUR_USERNAME-YOUR_SPACENAME.hf.space/ui`
+
+6. **Point Colab at the Space** (before the “Launch LifeOps server” cell in `notebooks/train_lifeops.ipynb`):
 
 ```python
 import os
-os.environ["LIFEOPS_ENV_URL"] = "https://YOUR_USERNAME-lifeops.hf.space"
+os.environ["LIFEOPS_ENV_URL"] = "https://YOUR_USERNAME-YOUR_SPACENAME.hf.space"
 ```
 
-Use **no trailing slash**. Training will skip starting a local server when the URL looks remote (e.g. contains `hf.space`).
+Use **no trailing slash**. Training skips starting a local server when the URL contains `hf.space` (or `huggingface.co`).
 
 ## 🚀 Quick Start (Agent Interaction)
 
