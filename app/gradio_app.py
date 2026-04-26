@@ -47,16 +47,19 @@ def take_step(choice_str, justification):
     except Exception as e:
         return 0, 0, 0, 0, f"Error: {str(e)}", "{}", "", "", "Error"
 
-# CSS for a modern Look
-theme = gr.themes.Soft(
-    primary_hub_palette=gr.themes.colors.blue,
-    secondary_hub_palette=gr.themes.colors.slate,
-).set(
-    button_primary_background_fill="*primary_500",
-    button_primary_background_fill_hover="*primary_600",
-)
+# Theme: avoid primary_hub_palette / secondary_hub_palette (removed in newer Gradio — breaks HF Spaces).
+def _lifeops_theme():
+    base = gr.themes.Soft()
+    try:
+        return base.set(
+            button_primary_background_fill="*primary_500",
+            button_primary_background_fill_hover="*primary_600",
+        )
+    except Exception:
+        return base
 
-with gr.Blocks(theme=theme, title="LifeOps Agent Dashboard") as demo:
+
+with gr.Blocks(theme=_lifeops_theme(), title="LifeOps Agent Dashboard") as demo:
     gr.Markdown("# 🧬 LifeOps: Agent Dashboard")
     gr.Markdown("Training AI to balance Career, Family, and Health in a chaotic world simulation.")
     
