@@ -13,8 +13,6 @@ import os
 import sys
 import uvicorn
 import gradio as gr
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
 
 # Add parent dir to path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -38,9 +36,9 @@ def build_demo():
     from app.gradio_app import demo as gradio_ui
     return gradio_ui
 
-# 3. Mount Gradio onto the FastAPI app
-# Judges can visit the root URL to see the dashboard
-app = gr.mount_gradio_app(app, build_demo(), path="/")
+# 3. Mount Gradio under /ui so OpenEnv HTTP routes (/health, /reset, /step) stay at the root
+# (needed for HF Spaces, Colab httpx, and RL reward clients).
+app = gr.mount_gradio_app(app, build_demo(), path="/ui")
 
 if __name__ == "__main__":
     import argparse

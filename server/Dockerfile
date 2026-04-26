@@ -25,9 +25,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY server/requirements.txt requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Install core OpenEnv and web dependencies
-RUN pip install --no-cache-dir openenv-core[core] gradio uvicorn python-dotenv
-
 # Copy the entire project
 # We copy to /app and ensure server/ is available
 COPY . .

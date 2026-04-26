@@ -5,8 +5,7 @@ colorFrom: blue
 colorTo: green
 sdk: docker
 pinned: true
-app_port: 8000
-base_path: /web
+app_port: 7860
 tags:
   - openenv
   - rl
@@ -26,6 +25,21 @@ We've all been there: a critical deadline at work vs. a precious moment with fam
 
 ## 🌟 The Mission
 Our mission is to move AI from "Instruction Following" to "Life Management." By training agents in LifeOps, we create assistants that understand **Burnout**, **Relationship Trust**, and **Financial Responsibility**.
+
+## ☁️ Hugging Face Space (public API for Colab / GRPO)
+
+This repo is a **Docker Space**: OpenEnv HTTP API lives at the **root** of your Space URL (`/health`, `/reset`, `/step`). The Gradio demo is at **`/ui`**.
+
+1. Create a [new Docker Space](https://huggingface.co/new-space) and connect this GitHub repository (or push a copy).
+2. Wait for the build; open the Space URL and confirm `https://YOUR_SPACE_URL/health` returns 200.
+3. In Colab (or anywhere), set the base URL before training:
+
+```python
+import os
+os.environ["LIFEOPS_ENV_URL"] = "https://YOUR_USERNAME-lifeops.hf.space"
+```
+
+Use **no trailing slash**. Training will skip starting a local server when the URL looks remote (e.g. contains `hf.space`).
 
 ## 🚀 Quick Start (Agent Interaction)
 
