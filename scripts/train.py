@@ -97,10 +97,14 @@ def _format_reward(text: object, tokenizer=None) -> float:
     lines = [ln.rstrip() for ln in text.splitlines()]
     lines = [ln for ln in lines if ln.strip() != ""]
 
+    # Line-count shaping: do NOT stack "not 2 lines" + "no justification" on 1-liners
+    # (that froze all single-line samples at the same -1.6 and killed GRPO variance).
     if len(lines) == 2:
         score += 0.6
+    elif len(lines) == 1:
+        score -= 0.3
     else:
-        score -= 1.2
+        score -= 1.0
 
     if len(lines) >= 1 and re.match(r"^\s*Action\s*:\s*\S", lines[0], re.IGNORECASE):
         score += 0.4
@@ -111,10 +115,11 @@ def _format_reward(text: object, tokenizer=None) -> float:
     if raw_action and not action_line_is_snake_enum(raw_action):
         score -= 0.9
 
-    if len(lines) >= 2 and re.match(r"^\s*Justification\s*:\s*\S", lines[1], re.IGNORECASE):
-        score += 0.4
-    else:
-        score -= 0.8
+    if len(lines) >= 2:
+        if re.match(r"^\s*Justification\s*:\s*\S", lines[1], re.IGNORECASE):
+            score += 0.4
+        else:
+            score -= 0.45
 
     if len(lines) >= 2:
         just_line = lines[1]
